@@ -1,6 +1,6 @@
 <content id="metadata" type="x-handlebars-metadata">
     {
-        "fields": ["Path", "LastModifiedTime", "Title"],
+        "fields": ["Path", "LastModifiedTime", "Title","EditorOWSUSER","Author"],
         "query": "",
         "sort": ""
     }
@@ -18,14 +18,17 @@
         $(function() {
             $('.myRow').css('background-color', '#c00000');
         });
+		
     </script>
-
+	
     <div class="ms-Grid-row ms-bgColor-blueDark ms-fontColor-white myRow">
         <h1 class="ms-font-xl ms-fontColor-white">Web part title: {{wpTitle}}</h1>
 
         <ul>
             {{#each items}}
-                <li><a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> {{#if LastModifiedTime}} - Last time modified: {{moment LastModifiedTime "DD/MM/YYYY"}} {{/if}}</li>
+			
+                <li><a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> Created by Author => {{splitDisplayNames Author}}  {{#if LastModifiedTime}} - 
+                and last modified by {{splitSPUser EditorOWSUSER 'displayName'}} ({{moment LastModifiedTime "DD/MM/YYYY"}}) {{/if}}</li>
             {{/each}}
         </ul>
     </div>
