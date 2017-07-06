@@ -22,3 +22,9 @@ export interface ISearchVisualizerState {
 export interface IMetadata {
     fields: string[];
 }
+
+export interface SPUser {
+    username?: string;
+    displayName?: string;
+    email?: string;
+}
