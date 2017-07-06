@@ -24,3 +24,17 @@ gulp test - TODO
 gulp serve - TODO
 gulp bundle - TODO
 gulp package-solution - TODO
+
+
+### SharePoint Helpers
+
+Available SharePoint Helpers are
+* splitDisplayNames (input => "user1;user2;user3") (common example is the author field)
+* splitSPUser (input => "email | displayname | .... i:0#.f|membership|username") (common example is the editor field)
+
+They can be use in the template as follows:
+```bash
+{{splitDisplayNames Author}}
+{{splitSPUser EditorOWSUSER 'displayName'}}
+
+```

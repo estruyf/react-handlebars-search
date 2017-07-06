@@ -12,6 +12,13 @@ import { Spinner, SpinnerSize, MessageBar, MessageBarType, Dialog, DialogType } 
 import { ISearchResponse } from "../services/ISearchService";
 import * as strings from 'searchVisualizerStrings';
 
+
+export interface SPUser {
+    username?: string;
+    displayName?: string;
+    email?: string;
+}
+
 export default class SearchVisualizer extends React.Component<ISearchVisualizerProps, ISearchVisualizerState> {
     private _searchService: SearchService;
     private _results: any[] = [];
@@ -45,6 +52,36 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
 
         // Load the typeof field handler for debugging
         Handlebars.registerHelper('typeof', TypeofHelper);
+
+
+        // SharePoint helper to split SPUserField (?multiple) into a string
+        // The template provide the property which will be returned
+        Handlebars.registerHelper('splitSPUser', function (userFieldValue, propertyRequested) {
+
+            if (userFieldValue == null)
+                return null;
+
+            const retValue:string[]=[];
+            let userFieldValueArray = userFieldValue.split(';').forEach(user => {
+                let userValues = user.split(' | ');
+                let spuser: SPUser = {
+                    displayName: userValues[1],
+                    email: userValues[0]
+                }
+                retValue.push(spuser[propertyRequested]);
+            });
+
+            return retValue.join(', ');
+        });
+
+        // SHarePoint helper to split the displaynames of for example the Author field (user1;user2...)
+        Handlebars.registerHelper('splitDisplayNames', function (displayNames) {
+
+            if (displayNames == null && displayNames.indexOf(';') == -1)
+                return null;
+
+            return displayNames.split(';').join(", ");;
+        });
     }
 
     /**
