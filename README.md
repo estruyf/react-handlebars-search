@@ -8,6 +8,8 @@ The idea of this web part is to mimic the functionality of the `Content Search W
 
 ![Search visualizer result](./assets/wp-example.gif)
 
+> Credits to [Simon-Pierre Plante](https://github.com/spplante) for the idea to make use of Handebars templates and [Mikael Svenson](https://twitter.com/mikaelsvenson) for the code to load external scripts. 
+
 ## Minimal Path to Awesome
 
 - Clone this repository
