@@ -6,7 +6,7 @@ This web part is created to allow you to visualize search results by using custo
 
 The idea of this web part is to mimic the functionality of the `Content Search Web Part` and its `display templates` approach.
 
-!(Search visualizer result)[./assets/wp-example.gif]
+![Search visualizer result](./assets/wp-example.gif)
 
 ## Minimal Path to Awesome
 
@@ -84,6 +84,6 @@ They can be use in the template as follows:
 
 With this setting you can specify if you want to execute/load the script that are defined in your template. When you add a custom template, the web part will automatically check and warn you (only when you are configuring the web part).
 
-[Script loading warning](script-loading.png)
+![Script loading warning](./assets/script-loading.png)
 
 > By default this setting is disabled.
