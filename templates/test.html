@@ -25,7 +25,7 @@
 
         <ul>
             {{#each items}}
-                <li><a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> - Last time modified: {{#if LastModifiedTime}} {{moment LastModifiedTime "DD/MM/YYYY"}} {{/if}}</li>
+                <li><a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> {{#if LastModifiedTime}} - Last time modified: {{moment LastModifiedTime "DD/MM/YYYY"}} {{/if}}</li>
             {{/each}}
         </ul>
     </div>
