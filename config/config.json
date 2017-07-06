@@ -1,0 +1,11 @@
+{
+    "entries": [{
+        "entry": "./lib/webparts/searchVisualizer/SearchVisualizerWebPart.js",
+        "manifest": "./src/webparts/searchVisualizer/SearchVisualizerWebPart.manifest.json",
+        "outputPath": "./dist/react-handlebars-wp.bundle.js"
+    }],
+    "externals": {},
+    "localizedResources": {
+        "searchVisualizerStrings": "webparts/searchVisualizer/loc/{locale}.js"
+    }
+}

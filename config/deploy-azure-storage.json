@@ -1,0 +1,6 @@
+{
+  "workingDir": "./temp/deploy/",
+  "account": "<!-- STORAGE ACCOUNT NAME -->",
+  "container": "react-handlebars-search",
+  "accessKey": "<!-- ACCESS KEY -->"
+}

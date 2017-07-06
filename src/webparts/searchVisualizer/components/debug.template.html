@@ -1,0 +1,71 @@
+<content id="metadata" type="x-handlebars-metadata">
+    {
+        "fields": []
+    }
+</content>
+
+<content id="template" type="x-handlebars-template">
+    <style>
+        .debug-view .title {
+            margin-bottom: 15px;
+        }
+
+        .debug-view ul {
+            word-break: break-all;
+        }
+
+        .debug-view .item {
+            background-color: #eaeaea;
+            border: 1px solid #a6a6a6;
+            margin-bottom: 15px;
+            padding: 15px;
+        }
+
+        .debug-view .item p {
+            margin: 5px 0;
+        }
+
+        .debug-view .item > p,
+        .debug-view .property {
+            border-bottom: 1px solid #c8c8c8;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .debug-view .value {
+            font-weight: bold;
+        }
+    </style>
+
+    <div class="debug-view">
+        <p class="ms-font-xl">Debug template</p>
+        <div>
+            <p class="ms-font-l">Web part details</p>
+            <ul>
+                <li>Web part title <code ng-non-bindable>{<!---->{wpTitle}<!---->}</code>: <strong>{{wpTitle}}</strong></li>
+                <li>Current user <code ng-non-bindable>{<!---->{pageCtx.user.displayName}<!---->}</code>: <strong>{{pageCtx.user.displayName}}</strong></li>
+                <li>Search API URL <code ng-non-bindable>{<!---->{calledUrl}<!---->}</code>: <strong>{{calledUrl}}</strong></li>
+                <li>Total restuls: <strong>{{items.length}}</strong></li>
+            </ul>
+        </div>
+        <div class="items">
+            <p class="ms-font-l">Result details</p>
+            {{#each items}}
+                <div class="item">
+                    <p class="ms-font-l">Result {{add @index 1}}</p>
+                    {{#each this}}
+                        <div class="property">
+                            <p>Field name: <span class="value">"{{@key}}"</span></p>
+                            <p>Field value: <span class="value">"{{this}}"</span></p>
+                            <p>Field type: <span class="value">"{{typeof this}}"</span></p>
+                            <p>Field usage: <span class="value"><span>{<!---->{</span>{{@key}}<span>}<!---->}</span></span></p>
+                        </div>
+                    {{/each}}
+                </div>
+            {{else}}
+                <div>Sorry, there were no results for your query</div>
+            {{/each}}
+        </div>
+    </div>
+</content>

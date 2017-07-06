@@ -1,0 +1,32 @@
+<content id="metadata" type="x-handlebars-metadata">
+    {
+        "fields": ["Path", "LastModifiedTime", "Title"],
+        "query": "",
+        "sort": ""
+    }
+</content>
+
+<content id="template" type="x-handlebars-template">
+    <style>
+        .myRow {
+            padding: 25px;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        $(function() {
+            $('.myRow').css('background-color', '#c00000');
+        });
+    </script>
+
+    <div class="ms-Grid-row ms-bgColor-blueDark ms-fontColor-white myRow">
+        <h1 class="ms-font-xl ms-fontColor-white">Web part title: {{wpTitle}}</h1>
+
+        <ul>
+            {{#each items}}
+                <li><a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> - Last time modified: {{#if LastModifiedTime}} {{moment LastModifiedTime "DD/MM/YYYY"}} {{/if}}</li>
+            {{/each}}
+        </ul>
+    </div>
+</content>

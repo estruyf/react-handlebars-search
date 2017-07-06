@@ -1,0 +1,10 @@
+{
+  "solution": {
+    "name": "react-handlebars-search-client-side-solution",
+    "id": "490f3be2-7e8a-4fe5-8d6b-49ae5d7c4a2e",
+    "version": "1.0.0.0"
+  },
+  "paths": {
+    "zippedPackage": "solution/react-handlebars-search.sppkg"
+  }
+}

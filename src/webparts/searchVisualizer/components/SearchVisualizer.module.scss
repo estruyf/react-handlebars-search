@@ -1,0 +1,18 @@
+.searchVisualizer {
+    .loading {
+        color: #003366;
+    }
+}
+
+.error {
+    a {
+        text-decoration: none;
+        &:visited,
+        &:hover {
+            text-decoration: none;
+        }
+        .icon {
+            font-size: 9px;
+        }
+    }
+}
