@@ -19,8 +19,11 @@ export default class SearchService {
      * @param sorting
      * @param fields
      */
-    public get(query: string, maxResults: number, sorting: string, fields: string[] = []) {
+    public get(query: string, maxResults: number, sorting: string, duplicates: boolean, startRow: number, fields: string[] = []) {
         return new Promise<ISearchResponse>((resolve, reject) => {
+            let totalResults: number = null;
+            let totalRowsIncludingDuplicates: number = null;
+
             let url: string = this._context.pageContext.web.absoluteUrl + "/_api/search/query?querytext=";
             // Check if a query is provided
             url += !this._isEmptyString(query) ? `'${this._tokenHelper.replaceTokens(query)}'` : "'*'";
@@ -31,8 +34,12 @@ export default class SearchService {
             // Add the rowlimit
             url += "&rowlimit=";
             url += !this._isNull(maxResults) ? maxResults : 3;
+            // Check the startrow
+            url += startRow <= 0 ? "" : `&startrow=${startRow}`;
             // Add sorting
             url += !this._isEmptyString(sorting) ? `&sortlist='${sorting}'` : "";
+            // Check if result duplicates needs to get trimmed
+            url += !duplicates ? "&trimduplicates=false" : "";
             // Add the client type
             url += "&clienttype='ContentSearchRegular'";
             // Do an Ajax call to receive the search results
@@ -50,6 +57,15 @@ export default class SearchService {
                 if (!this._isNull(res)) {
                     if (typeof res.PrimaryQueryResult !== 'undefined') {
                         if (typeof res.PrimaryQueryResult.RelevantResults !== 'undefined') {
+                            // Retrieve the total rows number
+                            if (res.PrimaryQueryResult.RelevantResults.TotalRows) {
+                                totalResults = res.PrimaryQueryResult.RelevantResults.TotalRows;
+                            }
+                            // Retrieve the total rows including the duplicates
+                            if (res.PrimaryQueryResult.RelevantResults.TotalRowsIncludingDuplicates) {
+                                totalRowsIncludingDuplicates = res.PrimaryQueryResult.RelevantResults.TotalRowsIncludingDuplicates;
+                            }
+                            // Retrieve all the table rows
                             if (typeof res.PrimaryQueryResult.RelevantResults.Table !== 'undefined') {
                                 if (typeof res.PrimaryQueryResult.RelevantResults.Table.Rows !== 'undefined') {
                                     resultsRetrieved = true;
@@ -68,6 +84,8 @@ export default class SearchService {
                 // Return the retrieved result set
                 const searchResp: ISearchResponse = {
                     results: this._results,
+                    totalResults: totalResults,
+                    totalResultsIncludingDuplicates: totalRowsIncludingDuplicates,
                     searchUrl: url
                 };
                 resolve(searchResp);

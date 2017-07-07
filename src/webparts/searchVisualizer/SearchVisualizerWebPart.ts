@@ -27,6 +27,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                 debug: this.properties.debug,
                 external: this.properties.external,
                 scriptloading: this.properties.scriptloading,
+                duplicates: this.properties.duplicates,
                 context: this.context
             }
         );
@@ -63,6 +64,11 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                                 }),
                                 PropertyPaneTextField('sorting', {
                                     label: strings.SortingFieldLabel
+                                }),
+                                PropertyPaneToggle('duplicates', {
+                                    label: strings.DuplicatesFieldLabel,
+                                    onText: 'Yes',
+                                    offText: 'No'
                                 })
                             ]
                         }

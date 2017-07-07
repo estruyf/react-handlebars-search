@@ -19,6 +19,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     private _fields: string[] = [];
     private _templateMarkup: string = "";
     private _tmplDoc: Document;
+    private _totalResults: number = 0;
+    private _pageNr: number = 0;
 
     constructor(props: ISearchVisualizerProps, state: ISearchVisualizerState) {
         super(props);
@@ -38,6 +40,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         // Bind "this" to the load template function
         this._loadTemplate = this._loadTemplate.bind(this);
         this._processResults = this._processResults.bind(this);
+        this._prevPage = this._prevPage.bind(this);
+        this._nextPage = this._nextPage.bind(this);
 
         // Load all the handlebars helpers
         let helpers = require<any>('handlebars-helpers')({
@@ -74,7 +78,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
             this._processSearchTasks();
         } else if (prevProps.query !== this.props.query ||
             prevProps.maxResults !== this.props.maxResults ||
-            prevProps.sorting !== this.props.sorting) {
+            prevProps.sorting !== this.props.sorting ||
+            prevProps.duplicates !== this.props.duplicates) {
             this._resetLoadingState();
             // Only refresh the search results
             this._processResults();
@@ -82,6 +87,9 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     }
 
     private _resetLoadingState() {
+        // Reset page number
+        this._pageNr = 0;
+        // Reset state
         this.setState({
             loading: true,
             error: "",
@@ -164,19 +172,25 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
      * Processing the search result retrieval process
      */
     private _processResults() {
+        const startRow = this._pageNr * this.props.maxResults;
         //  Get the search results and then bind it to the template
-        this._searchService.get(this.props.query, this.props.maxResults, this.props.sorting, this._fields).then((searchResp: ISearchResponse) => {
+        this._searchService.get(this.props.query, this.props.maxResults, this.props.sorting, this.props.duplicates, startRow, this._fields).then((searchResp: ISearchResponse) => {
             // Create the template values object
             const tmplValues: any = {
                 wpTitle: this.props.title,
                 pageCtx: this.props.context.pageContext,
                 items: searchResp.results,
+                totalResults: searchResp.totalResults,
+                totalResultsIncDuplicates: searchResp.totalResultsIncludingDuplicates,
                 calledUrl: searchResp.searchUrl
             };
 
             // Reload the new template
             let template: HandlebarsTemplateDelegate = Handlebars.compile(this._templateMarkup);
             let templateResult = template(tmplValues);
+
+            // Internally store the total results number
+            this._totalResults = searchResp.totalResults;
 
             // Update the current component state
             this.setState({
@@ -188,11 +202,65 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
             if (this.props.scriptloading) {
                 executeScript(this._tmplDoc.getElementById('template'));
             }
+
+            // Bind the paging events
+            this._bindPaging();
         }).catch((error: any) => {
             this.setState({
                 error: error.toString()
             });
         });
+    }
+
+
+    /**
+     * Bind the next and previous paging events to the paging elements defined in the template
+     */
+    private _bindPaging() {
+        const prevPageElm = document.querySelector(`.${styles.searchVisualizer} #prevPage`);
+        const nextPageElm = document.querySelector(`.${styles.searchVisualizer} #nextPage`);
+
+        if (prevPageElm) {
+            // Check if the element needs to be disabled
+            if (this._pageNr <= 0) {
+                prevPageElm.classList.add('disabled');
+            } else {
+                prevPageElm.classList.remove('disabled');
+                prevPageElm.addEventListener("click", () => {
+                    this._prevPage();
+                });
+            }
+        }
+
+        if (nextPageElm) {
+            // Check if the element needs to be disabled
+            if (this._totalResults > (this.props.maxResults * (this._pageNr + 1))) {
+                nextPageElm.classList.remove('disabled');
+                nextPageElm.addEventListener("click", () => {
+                    this._nextPage();
+                });
+            } else {
+                nextPageElm.classList.add('disabled');
+            }
+        }
+    }
+
+    /**
+     * Get the results of the previous page
+     */
+    private _prevPage() {
+        console.log(this._pageNr);
+        this._pageNr--;
+        this._processResults();
+    }
+
+    /**
+     * Get the results of the next page
+     */
+    private _nextPage() {
+        console.log(this._pageNr);
+        this._pageNr++;
+        this._processResults();
     }
 
     /**
@@ -207,7 +275,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
 
         if (this.state.error !== "") {
             return (
-                <MessageBar className={styles.error} messageBarType={ MessageBarType.error }>
+                <MessageBar className={styles.error} messageBarType={MessageBarType.error}>
                     <span>Sorry, something went wrong</span>
                     {
                         (() => {

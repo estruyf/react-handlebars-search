@@ -49,6 +49,11 @@ Specify the managed property name and the sorting order (comma separated):
 - Single: `lastmodifiedtime:ascending`
 - Multiple: `lastmodifiedtime:ascending,author:descending`
 
+#### Trim duplicate results
+
+Specify if you want to trim duplicate results.
+
+> By default this option is disabled.
 
 ### Template settings
 

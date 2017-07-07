@@ -1,13 +1,15 @@
 export interface ISearchResults {
-	PrimaryQueryResult: IPrimaryQueryResult;
+    PrimaryQueryResult: IPrimaryQueryResult;
 }
 
 export interface IPrimaryQueryResult {
-	RelevantResults: IRelevantResults;
+    RelevantResults: IRelevantResults;
 }
 
 export interface IRelevantResults {
     Table: ITable;
+    TotalRows: number;
+    TotalRowsIncludingDuplicates: number;
 }
 
 export interface ITable {
@@ -26,5 +28,7 @@ export interface ICellValue {
 
 export interface ISearchResponse {
     results: any[];
+    totalResults: number;
+    totalResultsIncludingDuplicates: number;
     searchUrl: string;
 }

@@ -1,17 +1,15 @@
 <content id="metadata" type="x-handlebars-metadata">
-    {
-        "fields": []
-    }
+    { "fields": [] }
 </content>
 
 <content id="template" type="x-handlebars-template">
     <style>
-        .debug-view .title {
-            margin-bottom: 15px;
+        .debug-view {
+            word-break: break-all;
         }
 
-        .debug-view ul {
-            word-break: break-all;
+        .debug-view .title {
+            margin-bottom: 15px;
         }
 
         .debug-view .item {
@@ -25,7 +23,7 @@
             margin: 5px 0;
         }
 
-        .debug-view .item > p,
+        .debug-view .item>p,
         .debug-view .property {
             border-bottom: 1px solid #c8c8c8;
             margin-bottom: 10px;
@@ -36,6 +34,18 @@
         .debug-view .value {
             font-weight: bold;
         }
+
+        .debug-view a.disabled,
+        .debug-view a.disabled:visited,
+        .debug-view a.disabled:hover {
+            color: #666666;
+            text-decoration: none;
+        }
+
+        .debug-view pre {
+            overflow: auto;
+        }
+
     </style>
 
     <div class="debug-view">
@@ -46,25 +56,38 @@
                 <li>Web part title <code ng-non-bindable>{<!---->{wpTitle}<!---->}</code>: <strong>{{wpTitle}}</strong></li>
                 <li>Current user <code ng-non-bindable>{<!---->{pageCtx.user.displayName}<!---->}</code>: <strong>{{pageCtx.user.displayName}}</strong></li>
                 <li>Search API URL <code ng-non-bindable>{<!---->{calledUrl}<!---->}</code>: <strong>{{calledUrl}}</strong></li>
-                <li>Total restuls: <strong>{{items.length}}</strong></li>
+                <li>Total results in the set: <strong>{{items.length}}</strong></li>
+                <li>Total results for the query: <strong>{{totalResults}}</strong></li>
+                <li>Total results including duplicates: <strong>{{totalResultsIncDuplicates}}</strong></li>
             </ul>
+        </div>
+        <div>
+            <p class="ms-font-l">Paging elements</p>
+            <p>If you want to be able to use paging in your templates add the following markup:</p>
+            <pre>&lt;a id="prevPage" href="javascript:;"&gt;Previous&lt;/a&gt;
+&lt;a id="nextPage" href="javascript:;"&gt;Next&lt;/a&gt;</pre>
+
+            <p>You can test them out:</p>
+            <a id="prevPage" href="javascript:;">Previous</a>
+            <a id="nextPage" href="javascript:;">Next</a>
         </div>
         <div class="items">
             <p class="ms-font-l">Result details</p>
             {{#each items}}
-                <div class="item">
-                    <p class="ms-font-l">Result {{add @index 1}}</p>
-                    {{#each this}}
-                        <div class="property">
-                            <p>Field name: <span class="value">"{{@key}}"</span></p>
-                            <p>Field value: <span class="value">"{{this}}"</span></p>
-                            <p>Field type: <span class="value">"{{typeof this}}"</span></p>
-                            <p>Field usage: <span class="value"><span>{<!---->{</span>{{@key}}<span>}<!---->}</span></span></p>
-                        </div>
-                    {{/each}}
+            <div class="item">
+                <p class="ms-font-l">Result {{add @index 1}}</p>
+                {{#each this}}
+                <div class="property">
+                    <p>Field name: <span class="value">"{{@key}}"</span></p>
+                    <p>Field value: <span class="value">"{{this}}"</span></p>
+                    <p>Field type: <span class="value">"{{typeof this}}"</span></p>
+                    <p>Field usage: <span class="value"><span>{<!---->{</span>{{@key}}<span>}<!---->}</span></span>
+                    </p>
                 </div>
+                {{/each}}
+            </div>
             {{else}}
-                <div>Sorry, there were no results for your query</div>
+            <div>Sorry, there were no results for your query</div>
             {{/each}}
         </div>
     </div>
