@@ -75,6 +75,19 @@ Specify an absolute URL to your HTML template file. In the templates folder you 
 
 > The project also automatically includes the [handlebars-helpers](https://github.com/helpers/handlebars-helpers) library for you. This way you can achieve more in your templates.
 
+Template can also have paging controls. You have to create two elements with the following IDs:
+- `prevPage`
+- `nextPage`
+
+```html
+<a id="prevPage" href="javascript:;">Previous</a>
+<a id="nextPage" href="javascript:;">Next</a>
+```
+
+The web part will automatically do the event binding.
+
+![Paging controls](./assets/paging.png)
+
 ##### SharePoint Helpers
 
 There are a couple of custom SharePoint helpers available for you to make use of. The list of available SP helpers are:
