@@ -31,7 +31,8 @@
             "sorting": "",
             "debug": true,
             "scriptloading": false,
-            "duplicates": false
+            "duplicates": false,
+            "privateGroups": false
         }
     }]
 }

@@ -19,7 +19,7 @@ export default class SearchService {
      * @param sorting
      * @param fields
      */
-    public get(query: string, maxResults: number, sorting: string, duplicates: boolean, startRow: number, fields: string[] = []) {
+    public get(query: string, maxResults: number, sorting: string, duplicates: boolean, privateGroups: boolean, startRow: number, fields: string[] = []) {
         return new Promise<ISearchResponse>((resolve, reject) => {
             let totalResults: number = null;
             let totalRowsIncludingDuplicates: number = null;
@@ -40,6 +40,8 @@ export default class SearchService {
             url += !this._isEmptyString(sorting) ? `&sortlist='${sorting}'` : "";
             // Check if result duplicates needs to get trimmed
             url += !duplicates ? "&trimduplicates=false" : "";
+            // Check if the user wants to search for private group data
+            url += privateGroups ? "&Properties='EnableDynamicGroups:true'" : "";
             // Add the client type
             url += "&clienttype='ContentSearchRegular'";
             // Do an Ajax call to receive the search results

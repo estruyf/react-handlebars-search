@@ -9,6 +9,7 @@ export interface ISearchVisualizerProps {
     external: string;
     scriptloading: boolean;
     duplicates: boolean;
+    privateGroups: boolean;
     context: IWebPartContext;
 }
 

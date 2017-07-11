@@ -7,4 +7,5 @@ export interface ISearchVisualizerWebPartProps {
     external: string;
     scriptloading: boolean;
     duplicates: boolean;
+    privateGroups: boolean;
 }

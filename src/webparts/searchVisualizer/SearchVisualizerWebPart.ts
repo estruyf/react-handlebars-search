@@ -28,6 +28,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                 external: this.properties.external,
                 scriptloading: this.properties.scriptloading,
                 duplicates: this.properties.duplicates,
+                privateGroups: this.properties.privateGroups,
                 context: this.context
             }
         );
@@ -67,8 +68,13 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                                 }),
                                 PropertyPaneToggle('duplicates', {
                                     label: strings.DuplicatesFieldLabel,
-                                    onText: 'Yes',
-                                    offText: 'No'
+                                    onText: strings.DuplicatesFieldLabelOn,
+                                    offText: strings.DuplicatesFieldLabelOff
+                                }),
+                                PropertyPaneToggle('privateGroups', {
+                                    label: strings.PrivateGroupsFieldLabel,
+                                    onText: strings.PrivateGroupsFieldLabelOn,
+                                    offText: strings.PrivateGroupsFieldLabelOff
                                 })
                             ]
                         }
@@ -87,8 +93,8 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                                 }),
                                 PropertyPaneToggle('debug', {
                                     label: strings.DebugFieldLabel,
-                                    onText: 'Yes',
-                                    offText: 'No'
+                                    onText: strings.DebugFieldLabelOn,
+                                    offText: strings.DebugFieldLabelOff
                                 }),
                                 PropertyPaneTextField('external', {
                                     label: strings.ExternalFieldLabel,
@@ -96,8 +102,8 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                                 }),
                                 PropertyPaneToggle('scriptloading', {
                                     label: strings.ScriptloadingFieldLabel,
-                                    onText: 'Danger mode',
-                                    offText: 'Safe mode'
+                                    onText: strings.ScriptloadingFieldLabelOn,
+                                    offText: strings.ScriptloadingFieldLabelOff
                                 })
                             ]
                         }

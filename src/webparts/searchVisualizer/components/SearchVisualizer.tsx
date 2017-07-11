@@ -79,7 +79,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         } else if (prevProps.query !== this.props.query ||
             prevProps.maxResults !== this.props.maxResults ||
             prevProps.sorting !== this.props.sorting ||
-            prevProps.duplicates !== this.props.duplicates) {
+            prevProps.duplicates !== this.props.duplicates ||
+            prevProps.privateGroups !== this.props.privateGroups) {
             this._resetLoadingState();
             // Only refresh the search results
             this._processResults();
@@ -174,7 +175,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     private _processResults() {
         const startRow = this._pageNr * this.props.maxResults;
         //  Get the search results and then bind it to the template
-        this._searchService.get(this.props.query, this.props.maxResults, this.props.sorting, this.props.duplicates, startRow, this._fields).then((searchResp: ISearchResponse) => {
+        this._searchService.get(this.props.query, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields).then((searchResp: ISearchResponse) => {
             // Create the template values object
             const tmplValues: any = {
                 wpTitle: this.props.title,

@@ -1,4 +1,5 @@
 declare interface ISearchVisualizerStrings {
+    /* Fields */
     PropertyPaneDescription: string;
     QueryGroupName: string;
     TemplateGroupName: string;
@@ -8,12 +9,25 @@ declare interface ISearchVisualizerStrings {
     FieldsMaxResults: string;
     SortingFieldLabel: string;
     DebugFieldLabel: string;
+    DebugFieldLabelOn: string;
+    DebugFieldLabelOff: string;
     ExternalFieldLabel: string;
     ScriptloadingFieldLabel: string;
+    ScriptloadingFieldLabelOn: string;
+    ScriptloadingFieldLabelOff: string;
     DuplicatesFieldLabel: string;
+    DuplicatesFieldLabelOn: string;
+    DuplicatesFieldLabelOff: string;
+    PrivateGroupsFieldLabel: string;
+    PrivateGroupsFieldLabelOn: string;
+    PrivateGroupsFieldLabelOff: string;
+
+    /* Validation */
     QuertValidationEmpty: string;
     TemplateValidationEmpty: string;
     TemplateValidationHTML: string;
+
+    /* Dialog */
     ScriptsDialogHeader: string;
     ScriptsDialogSubText: string;
 }
