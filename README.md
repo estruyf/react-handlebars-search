@@ -8,7 +8,7 @@ The idea of this web part is to mimic the functionality of the `Content Search W
 
 ![Search visualizer result](./assets/wp-example.gif)
 
-> Credits to [Simon-Pierre Plante](https://github.com/spplante) for the idea to make use of Handebars templates and [Mikael Svenson](https://twitter.com/mikaelsvenson) for the code to load external scripts. 
+> Credits to [Simon-Pierre Plante](https://github.com/spplante) for the idea to make use of Handebars templates and [Mikael Svenson](https://twitter.com/mikaelsvenson) for the code to allow to load external scripts in the templates. 
 
 ## Minimal Path to Awesome
 
@@ -22,7 +22,7 @@ The idea of this web part is to mimic the functionality of the `Content Search W
 
 ### Search query settings
 
-![Search query settings](./assets/search-query.png)
+![Search query settings](./assets/search-query-20170808.png)
 
 #### Queries
 
@@ -43,6 +43,8 @@ But you can also use search tokens like:
 
 Specify the number of results you want to retrieve for the specified query.
 
+> Maximum 50 results. This is a limit configured in the web part code and can be changed.
+
 #### Sorting
 
 Specify the managed property name and the sorting order (comma separated):
@@ -52,6 +54,12 @@ Specify the managed property name and the sorting order (comma separated):
 #### Trim duplicate results
 
 Specify if you want to trim duplicate results.
+
+> By default this option is disabled.
+
+### Search through data from private groups
+
+Specify if you want to search through the data of private Office 365 Group sites.
 
 > By default this option is disabled.
 
