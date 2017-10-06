@@ -12,6 +12,7 @@ import SearchService from "../services/SearchService";
 import { Spinner, SpinnerSize, MessageBar, MessageBarType, Dialog, DialogType } from 'office-ui-fabric-react';
 import { ISearchResponse } from "../services/ISearchService";
 import * as strings from 'searchVisualizerStrings';
+import * as uuidv4 from 'uuid/v4';
 
 export default class SearchVisualizer extends React.Component<ISearchVisualizerProps, ISearchVisualizerState> {
     private _searchService: SearchService;
@@ -21,12 +22,16 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     private _tmplDoc: Document;
     private _totalResults: number = 0;
     private _pageNr: number = 0;
+    private _compId: string = "";
 
     constructor(props: ISearchVisualizerProps, state: ISearchVisualizerState) {
         super(props);
 
         // Initialize the search service
         this._searchService = new SearchService(props.context);
+
+        // Specify a unique ID for the component
+        this._compId = 'search-' + uuidv4();
 
         // Initialize the current component state
         this.state = {
@@ -218,8 +223,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
      * Bind the next and previous paging events to the paging elements defined in the template
      */
     private _bindPaging() {
-        const prevPageElm = document.querySelector(`.${styles.searchVisualizer} #prevPage`);
-        const nextPageElm = document.querySelector(`.${styles.searchVisualizer} #nextPage`);
+        const prevPageElm = document.querySelector(`#${this._compId} #prevPage`);
+        const nextPageElm = document.querySelector(`#${this._compId} #nextPage`);
 
         if (prevPageElm) {
             // Check if the element needs to be disabled
@@ -303,7 +308,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         }
 
         return (
-            <div className={styles.searchVisualizer}>
+            <div id={this._compId} className={styles.searchVisualizer}>
                 {view}
 
                 <Dialog isOpen={this.state.showScriptDialog} type={DialogType.normal} onDismiss={this._toggleDialog.bind(this)} title={strings.ScriptsDialogHeader} subText={strings.ScriptsDialogSubText}></Dialog>
