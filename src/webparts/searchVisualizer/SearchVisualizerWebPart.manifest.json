@@ -1,5 +1,5 @@
 {
-    "$schema": "../../../node_modules/@microsoft/sp-module-interfaces/lib/manifestSchemas/jsonSchemas/clientSideComponentManifestSchema.json",
+    "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
 
     "id": "0651b316-c8f2-4e27-887a-b7a46b3e94c1",
     "alias": "SearchVisualizerWebPart",
@@ -16,13 +16,16 @@
     "preconfiguredEntries": [{
         "groupId": "0651b316-c8f2-4e27-887a-b7a46b3e94c1",
         "group": {
-            "default": "SPFx web parts"
+            "default": "SPFx web parts",
+            "fr-FR": "Webparts SPFx"
         },
         "title": {
-            "default": "Search result visualizer"
+            "default": "Search result visualizer",
+            "fr-FR": "Visualiseur de résultats de recherche"
         },
         "description": {
-            "default": "This web part can visualize search results by making use of custom Handlebar templates"
+            "default": "This web part can visualize search results by making use of custom Handlebar templates",
+            "fr-FR": "Ce Webpart permet de visualiser les résultats de recherche en utilisant des template Handlebars personnalisés"
         },
         "officeFabricIconFontName": "Search",
         "properties": {

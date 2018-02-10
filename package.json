@@ -6,31 +6,29 @@
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "@microsoft/sp-core-library": "~1.1.0",
-    "@microsoft/sp-webpart-base": "~1.1.1",
+    "@microsoft/sp-core-library": "~1.4.0",
+    "@microsoft/sp-webpart-base": "~1.4.0",
     "@types/handlebars": "4.0.33",
-    "@types/react": "0.14.46",
-    "@types/react-addons-shallow-compare": "0.14.17",
-    "@types/react-addons-test-utils": "0.14.15",
-    "@types/react-addons-update": "0.14.14",
-    "@types/react-dom": "0.14.18",
+    "react": "15.6.2",
+    "react-dom": "15.6.2",
+    "@types/react": "15.6.6",
+    "@types/react-dom": "15.5.6",
     "@types/webpack-env": ">=1.12.1 <1.14.0",
     "handlebars": "4.0.10",
     "handlebars-helpers": "0.8.2",
-    "moment": "2.18.1",
-    "react": "15.4.2",
-    "react-dom": "15.4.2",
+    "moment": "~2.20.1",
     "uuid": "3.1.0"
   },
   "devDependencies": {
-    "@microsoft/sp-build-web": "~1.1.0",
-    "@microsoft/sp-module-interfaces": "~1.1.0",
-    "@microsoft/sp-webpart-workbench": "~1.1.0",
+    "@microsoft/sp-build-web": "~1.4.0",
+    "@microsoft/sp-module-interfaces": "~1.4.0",
+    "@microsoft/sp-webpart-workbench": "~1.4.0",
     "@types/chai": ">=3.4.34 <3.6.0",
     "@types/mocha": ">=2.2.33 <2.6.0",
     "@types/uuid": "^3.4.2",
     "gulp": "~3.9.1",
-    "unlazy-loader": "0.1.2"
+    "unlazy-loader": "0.1.2",
+    "ajv": "~5.2.2"
   },
   "scripts": {
     "build": "gulp bundle",
