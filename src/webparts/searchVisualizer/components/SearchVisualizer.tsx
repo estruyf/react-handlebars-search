@@ -269,6 +269,25 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         this._processResults();
     }
 
+
+    /**
+     * Toggle the show error message
+     */
+    private _toggleError() {
+        this.setState({
+            showError: !this.state.showError
+        });
+    }
+
+    /**
+     * Toggle the script dialog visibility
+     */
+    private _toggleDialog() {
+        this.setState({
+            showScriptDialog: !this.state.showScriptDialog
+        });
+    }
+
     /**
      * Render the contents of the web part
      */
@@ -308,30 +327,11 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         }
 
         return (
-            <div id={this._compId} className={styles.searchVisualizer}>
+            <div id={this._compId} className={`${styles.searchVisualizer} ms-Fabric--v6-0-0`}>
                 {view}
 
                 <Dialog isOpen={this.state.showScriptDialog} type={DialogType.normal} onDismiss={this._toggleDialog.bind(this)} title={strings.ScriptsDialogHeader} subText={strings.ScriptsDialogSubText}></Dialog>
             </div>
         );
-    }
-
-
-    /**
-     * Toggle the show error message
-     */
-    private _toggleError() {
-        this.setState({
-            showError: !this.state.showError
-        });
-    }
-
-    /**
-     * Toggle the script dialog visibility
-     */
-    private _toggleDialog() {
-        this.setState({
-            showScriptDialog: !this.state.showScriptDialog
-        });
     }
 }

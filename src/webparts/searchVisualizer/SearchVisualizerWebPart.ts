@@ -13,8 +13,16 @@ import * as strings from 'searchVisualizerStrings';
 import SearchVisualizer from './components/SearchVisualizer';
 import { ISearchVisualizerProps } from './components/ISearchVisualizerProps';
 import { ISearchVisualizerWebPartProps } from './ISearchVisualizerWebPartProps';
+import { SPComponentLoader } from '@microsoft/sp-loader';
 
 export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISearchVisualizerWebPartProps> {
+
+    constructor() {
+      super();
+
+      // Load the core UI Fabric styles
+      SPComponentLoader.loadCss('https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/6.0.0/css/fabric-6.0.0.scoped.min.css');
+    }
 
     public render(): void {
         const element: React.ReactElement<ISearchVisualizerProps> = React.createElement(
