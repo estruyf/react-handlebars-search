@@ -1,8 +1,16 @@
 {
+  "$schema": "https://dev.office.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
     "name": "react-handlebars-search-client-side-solution",
     "id": "490f3be2-7e8a-4fe5-8d6b-49ae5d7c4a2e",
-    "version": "1.0.0.0"
+    "version": "1.0.0.2",
+    "title": "Search result visualizer",
+    "supportedLocales": [
+      "en-US",
+      "fr-FR"
+    ],
+    "skipFeatureDeployment": false,
+    "includeClientSideAssets": true
   },
   "paths": {
     "zippedPackage": "solution/react-handlebars-search.sppkg"

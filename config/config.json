@@ -1,11 +1,18 @@
 {
-    "entries": [{
-        "entry": "./lib/webparts/searchVisualizer/SearchVisualizerWebPart.js",
-        "manifest": "./src/webparts/searchVisualizer/SearchVisualizerWebPart.manifest.json",
-        "outputPath": "./dist/react-handlebars-wp.bundle.js"
-    }],
-    "externals": {},
+    "$schema": "https://dev.office.com/json-schemas/spfx-build/config.2.0.schema.json",
+    "version": "2.0",
+    "bundles": {
+        "react-handlebars-search": {
+            "components": [{
+                "entrypoint": "./lib/webparts/searchVisualizer/SearchVisualizerWebPart.js",
+                "manifest": "./src/webparts/searchVisualizer/SearchVisualizerWebPart.manifest.json"
+            }]
+        }
+    },
+    "externals": {
+        "moment": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment-with-locales.min.js"
+    },
     "localizedResources": {
-        "searchVisualizerStrings": "webparts/searchVisualizer/loc/{locale}.js"
+        "searchVisualizerStrings": "src/webparts/searchVisualizer/loc/{locale}.js"
     }
 }
