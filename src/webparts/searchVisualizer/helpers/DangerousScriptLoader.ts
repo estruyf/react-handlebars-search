@@ -8,42 +8,43 @@ export default function executeScript(element: HTMLElement) {
     // Define global name to tack scripts on in case script to be loaded is not AMD/UMD
     (<any>window).ScriptGlobal = {};
 
+    // main section of function
+    let scripts = [],
+        script,
+        children_nodes = element.childNodes,
+        child,
+        i,
+        urls = [],
+        onLoads = [];
+
     function nodeName(elem, name) {
         return elem.nodeName && elem.nodeName.toUpperCase() === name.toUpperCase();
     }
 
     function evalScript(elem) {
-        var data = (elem.text || elem.textContent || elem.innerHTML || ""),
-            head = document.getElementsByTagName("head")[0] ||
-                document.documentElement,
-            script = document.createElement("script");
+        let data = (elem.text || elem.textContent || elem.innerHTML || ""),
+            head = document.getElementsByTagName("head")[0] || document.documentElement,
+            intScript = document.createElement("script");
 
-        script.type = "text/javascript";
+            intScript.type = "text/javascript";
         if (elem.src && elem.src.length > 0) {
             return;
         }
         if (elem.onload && elem.onload.length > 0) {
-            script.onload = elem.onload;
+          intScript.onload = elem.onload;
         }
 
         try {
             // doesn't work on ie...
-            script.appendChild(document.createTextNode(data));
+            intScript.appendChild(document.createTextNode(data));
         } catch (e) {
             // IE has funky script nodes
-            script.text = data;
+            intScript.text = data;
         }
 
-        head.insertBefore(script, head.firstChild);
-        head.removeChild(script);
+        head.insertBefore(intScript, head.firstChild);
+        head.removeChild(intScript);
     }
-
-    // main section of function
-    var scripts = [],
-        script,
-        children_nodes = element.childNodes,
-        child,
-        i;
 
     for (i = 0; children_nodes[i]; i++) {
         child = children_nodes[i];
@@ -52,8 +53,6 @@ export default function executeScript(element: HTMLElement) {
         }
     }
 
-    const urls = [];
-    const onLoads = [];
     for (i = 0; scripts[i]; i++) {
         script = scripts[i];
         if (script.src && script.src.length > 0) {
