@@ -1,4 +1,4 @@
-import { SPUser } from './../components/ISearchVisualizerProps';
+import { SPUser, SPUrl } from './../components/ISearchVisualizerProps';
 // SharePoint helper to split SPUserField (?multiple) into a string
 
 // The template provide the property which will be returned
@@ -40,5 +40,20 @@ export const splitSPTaxonomy = (taxonomyFieldValue) => {
         let termsValues = taxonomyValues.slice(0, taxonomyValues.lastIndexOf(';GTSet'));
         retValue.push(termsValues);
     });
+    return retValue.join(', ');
+};
+
+// SharePoint helper to split url/desciption
+export const splitSPUrl = (urlFieldValue, propertyRequested) => {
+    if (urlFieldValue == null)
+        return null;
+
+    const retValue: string[] = [];
+    let spurl: SPUrl = {
+        url: urlFieldValue.split(',')[0],
+        description: urlFieldValue.split(',')[1]
+    };
+    retValue.push(spurl[propertyRequested]);
+
     return retValue.join(', ');
 };
