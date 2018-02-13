@@ -27,3 +27,18 @@ export const splitDisplayNames = (displayNames) => {
 
     return displayNames.split(';').join(", ");
 };
+
+// SharePoint helper to split the taxonomy name
+export const splitSPTaxonomy = (taxonomyFieldValue) => {
+    if (taxonomyFieldValue == null)
+        return null;
+
+    const retValue: string[] = [];
+
+    let taxonomyFieldValueArray = taxonomyFieldValue.split(';GP0').forEach(taxonomy => {
+        let taxonomyValues = taxonomy.split('|')[3];
+        let termsValues = taxonomyValues.slice(0, taxonomyValues.lastIndexOf(';GTSet'));
+        retValue.push(termsValues);
+    });
+    return retValue.join(', ');
+};
