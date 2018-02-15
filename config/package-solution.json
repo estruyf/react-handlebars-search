@@ -9,7 +9,7 @@
       "en-US",
       "fr-FR"
     ],
-    "skipFeatureDeployment": false,
+    "skipFeatureDeployment": true,
     "includeClientSideAssets": true
   },
   "paths": {
