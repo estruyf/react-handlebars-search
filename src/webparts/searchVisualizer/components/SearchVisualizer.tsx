@@ -6,13 +6,12 @@ import { ISearchVisualizerProps, ISearchVisualizerState, IMetadata } from './ISe
 import { SPHttpClient } from "@microsoft/sp-http";
 import SPHttpClientResponse from "@microsoft/sp-http/lib/spHttpClient/SPHttpClientResponse";
 import executeScript from "../helpers/DangerousScriptLoader";
-import TypeofHelper from "../helpers/TypeofHelper";
-import * as spHelpers from "../helpers/SharePointHelpers";
 import SearchService from "../services/SearchService";
 import { Spinner, SpinnerSize, MessageBar, MessageBarType, Dialog, DialogType } from 'office-ui-fabric-react';
 import { ISearchResponse } from "../services/ISearchService";
 import * as strings from 'searchVisualizerStrings';
 import * as uuidv4 from 'uuid/v4';
+import CustomHelpers from '../helpers/CustomHelpers';
 
 export default class SearchVisualizer extends React.Component<ISearchVisualizerProps, ISearchVisualizerState> {
     private _searchService: SearchService;
@@ -53,13 +52,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
             handlebars: Handlebars
         });
 
-        // Load the typeof field handler for debugging
-        Handlebars.registerHelper('typeof', TypeofHelper);
-        // Load the SharePoint helpers
-        Handlebars.registerHelper('splitDisplayNames', spHelpers.splitDisplayNames);
-        Handlebars.registerHelper('splitSPUser', spHelpers.splitSPUser);
-        Handlebars.registerHelper('splitSPTaxonomy', spHelpers.splitSPTaxonomy);
-        Handlebars.registerHelper('splitSPUrl', spHelpers.splitSPUrl);
+        // Register all custom helpers
+        CustomHelpers.init(this.props.context);
     }
 
     /**

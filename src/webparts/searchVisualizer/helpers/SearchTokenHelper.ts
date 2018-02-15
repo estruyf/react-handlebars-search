@@ -7,6 +7,10 @@ export default class SearchTokenHelper {
 
     constructor(private _context: IWebPartContext) {}
 
+    /**
+     * Update the tokens in the search query
+     * @param restUrl
+     */
     public replaceTokens(restUrl: string): string {
         const tokens = restUrl.match(this.regexVal);
 
@@ -14,7 +18,7 @@ export default class SearchTokenHelper {
             tokens.forEach((token) => {
                 // Check which token has been retrieved
                 if (token.toLowerCase().indexOf('today') !== -1) {
-                    const dateValue = this.getDateValue(token);
+                    const dateValue = this._getDateValue(token);
                     restUrl = restUrl.replace(token, dateValue);
                 }
                 else if (token.toLowerCase().indexOf('user') !== -1) {
@@ -40,26 +44,38 @@ export default class SearchTokenHelper {
 		return restUrl;
     }
 
-    private getDateValue(token: string): string {
+    /**
+     * Calculate the date based on the token
+     * @param token
+     */
+    private _getDateValue(token: string): string {
         let dateValue = moment();
         // Check if we need to add days
         if (token.toLowerCase().indexOf("{today+") !== -1) {
-            const daysVal = this.getDaysVal(token);
+            const daysVal = this._getDaysVal(token);
             dateValue = dateValue.add(daysVal, 'day');
         }
         // Check if we need to subtract days
         if (token.toLowerCase().indexOf("{today-") !== -1) {
-            const daysVal = this.getDaysVal(token);
+            const daysVal = this._getDaysVal(token);
             dateValue = dateValue.subtract(daysVal, 'day');
         }
         return dateValue.format('YYYY-MM-DD');
     }
 
-    private getDaysVal(token: string): number {
+    /**
+     * Get number of days to add or substract
+     * @param token
+     */
+    private _getDaysVal(token: string): number {
         const tmpDays: string = token.substring(7, token.length - 1);
         return parseInt(tmpDays) || 0;
     }
 
+    /**
+     * Get the user property value
+     * @param token
+     */
     private getUserValue(token: string): string {
         let userValue = `"${this._context.pageContext.user.displayName}"`;
 

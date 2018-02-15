@@ -1,4 +1,4 @@
-import { IWebPartContext } from "@microsoft/sp-webpart-base";
+import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 export interface ISearchVisualizerProps {
     title: string;
@@ -10,7 +10,7 @@ export interface ISearchVisualizerProps {
     scriptloading: boolean;
     duplicates: boolean;
     privateGroups: boolean;
-    context: IWebPartContext;
+    context: WebPartContext;
 }
 
 export interface ISearchVisualizerState {
@@ -25,13 +25,13 @@ export interface IMetadata {
     fields: string[];
 }
 
-export interface SPUser {
+export interface ISPUser {
     username?: string;
     displayName?: string;
     email?: string;
 }
 
-export interface SPUrl {
+export interface ISPUrl {
     url?: string;
     description?: string;
 }

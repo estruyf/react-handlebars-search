@@ -84,15 +84,9 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                                     onText: strings.PrivateGroupsFieldLabelOn,
                                     offText: strings.PrivateGroupsFieldLabelOff
                                 })
-                            ]
-                        }
-                    ]
-                },
-                {
-                    header: {
-                        description: strings.PropertyPaneDescription
-                    },
-                    groups: [
+                            ],
+                            isCollapsed: true
+                        },
                         {
                             groupName: strings.TemplateGroupName,
                             groupFields: [
@@ -113,9 +107,11 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                                     onText: strings.ScriptloadingFieldLabelOn,
                                     offText: strings.ScriptloadingFieldLabelOff
                                 })
-                            ]
+                            ],
+                            isCollapsed: true
                         }
-                    ]
+                    ],
+                    displayGroupsAsAccordion: true
                 }
             ]
         };
