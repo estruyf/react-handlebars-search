@@ -30,3 +30,10 @@ export interface SPUser {
     displayName?: string;
     email?: string;
 }
+
+export interface SPUrl {
+    url?: string;
+    description?: string;
+}
+
+

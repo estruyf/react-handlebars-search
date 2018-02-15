@@ -58,6 +58,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         // Load the SharePoint helpers
         Handlebars.registerHelper('splitDisplayNames', spHelpers.splitDisplayNames);
         Handlebars.registerHelper('splitSPUser', spHelpers.splitSPUser);
+        Handlebars.registerHelper('splitSPTaxonomy', spHelpers.splitSPTaxonomy);
+        Handlebars.registerHelper('splitSPUrl', spHelpers.splitSPUrl);
     }
 
     /**

@@ -101,11 +101,14 @@ The web part will automatically do the event binding.
 There are a couple of custom SharePoint helpers available for you to make use of. The list of available SP helpers are:
 - `splitDisplayNames`: (input => "user1;user2;user3") (common example is the author field)
 - `splitSPUser`: (input => "email | displayname | .... i:0#.f|membership|username") (common example is the editor field)
+- `splitSPTaxonomy`: (input => "GP0|#4586d598-0685-4fdc-bd99-b9eed3cea791;L0|#04586d598-0685-4fdc-bd99-b9eed3cea791|MyTerm;GTSet|#e961b817-850b-4898-9dd7-12409669d2fe")
+- `splitSPUrl`: (input => "http://www.myurl.com,Description")
 
 They can be use in the template as follows:
 ```html
 {{splitDisplayNames Author}}
 {{splitSPUser EditorOWSUSER 'displayName'}}
+{{splitSPTaxonomy owstaxIdmytaxonomy}}
 ```
 
 #### Script loading
