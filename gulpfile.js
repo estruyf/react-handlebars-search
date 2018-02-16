@@ -2,6 +2,7 @@
 
 const gulp = require('gulp');
 const build = require('@microsoft/sp-build-web');
+const path = require('path');
 
 /**
  * Task is necessary for VSTS
@@ -27,10 +28,9 @@ const envCheck = build.subTask('environmentCheck', (gulp, config, done) => {
           });
         } else {
           generatedConfiguration.module.rules.push({
-            test: [/(\/handlebars\/)([A-Za-z0-9\-\.\/]+)(\.js$)/,
-            /(\/handlebars-helpers\/)([A-Za-z0-9\-\.\/]+)(\.js$)/,
-            /(\/create-frame\/)([A-Za-z0-9\-\.\/]+)(\.js$)/],
-            loader: 'unlazy-loader'
+            test: /\.js$/,
+            loader: 'unlazy-loader',
+            exclude: [path.resolve(__dirname, './lib/')]
           });
         }
 
@@ -44,7 +44,7 @@ const envCheck = build.subTask('environmentCheck', (gulp, config, done) => {
     });
 
     done();
-  });
-  build.rig.addPreBuildTask(envCheck);
+});
+build.rig.addPreBuildTask(envCheck);
 
 build.initialize(gulp);
