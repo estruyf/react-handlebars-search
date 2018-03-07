@@ -8,6 +8,7 @@ export default class HBSharePointHelpers {
         Handlebars.registerHelper('splitSPUser', this._splitSPUser);
         Handlebars.registerHelper('splitSPTaxonomy', this._splitSPTaxonomy);
         Handlebars.registerHelper('splitSPUrl', this._splitSPUrl);
+        Handlebars.registerHelper('currentSPCulture', this._currentSPCulture);
     }
 
     /**
@@ -86,4 +87,19 @@ export default class HBSharePointHelpers {
         };
         return spurl[propertyRequested];
     }
+
+    /**
+     * SharePoint helper to return current culture
+     * @param currentCulture
+     */
+    private _currentSPCulture = (currentCulture) => {
+        if (currentCulture == null) {
+            return null;
+        }
+
+        console.log(this._context.pageContext.cultureInfo.currentUICultureName);
+
+        return this._context.pageContext.cultureInfo.currentUICultureName;
+    }
+
 }
