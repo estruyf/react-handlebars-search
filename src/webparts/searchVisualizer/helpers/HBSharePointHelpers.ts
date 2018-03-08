@@ -96,9 +96,6 @@ export default class HBSharePointHelpers {
         if (currentCulture == null) {
             return null;
         }
-
-        console.log(this._context.pageContext.cultureInfo.currentUICultureName);
-
         return this._context.pageContext.cultureInfo.currentUICultureName;
     }
 
