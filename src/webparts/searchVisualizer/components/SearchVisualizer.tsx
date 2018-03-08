@@ -17,11 +17,13 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     private _searchService: SearchService;
     private _results: any[] = [];
     private _fields: string[] = [];
+    private _translation: string = "";
     private _templateMarkup: string = "";
     private _tmplDoc: Document;
     private _totalResults: number = 0;
     private _pageNr: number = 0;
     private _compId: string = "";
+    private _locale: string = "en-US";
 
     constructor(props: ISearchVisualizerProps, state: ISearchVisualizerState) {
         super(props);
@@ -40,6 +42,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
             showError: false,
             showScriptDialog: false
         };
+
+        this._locale = props.context.pageContext.cultureInfo.currentUICultureName;
 
         // Bind "this" to the load template function
         this._loadTemplate = this._loadTemplate.bind(this);
@@ -121,6 +125,14 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
                     this._setDefaultMetadata();
                 }
 
+                // Get translation
+                let translation = JSON.parse(this._tmplDoc.getElementById('translation').innerHTML);
+                if (translation !== null) {
+                    if (typeof translation !== "undefined") {
+                        this._translation = translation;
+                    }
+                }
+
                 // Get the template metadata
                 this._templateMarkup = this._tmplDoc.getElementById('template').innerHTML;
                 // When property pane is open, check if there are script tags in the provided template
@@ -178,13 +190,16 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         //  Get the search results and then bind it to the template
         this._searchService.get(this.props.query, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields).then((searchResp: ISearchResponse) => {
             // Create the template values object
+
             const tmplValues: any = {
                 wpTitle: this.props.title,
                 pageCtx: this.props.context.pageContext,
                 items: searchResp.results,
                 totalResults: searchResp.totalResults,
                 totalResultsIncDuplicates: searchResp.totalResultsIncludingDuplicates,
-                calledUrl: searchResp.searchUrl
+                calledUrl: searchResp.searchUrl,
+                translation:this._translation[this._locale],
+                locale: this._locale
             };
 
             // Reload the new template

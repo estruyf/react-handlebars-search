@@ -1,43 +1,60 @@
 <content id="metadata" type="x-handlebars-metadata">
-    { "fields": ["Path", "LastModifiedTime", "Title","EditorOWSUSER","Author"], "query": "", "sort": "" }
-</content>
+        { "fields": ["Path", "LastModifiedTime", "Title","EditorOWSUSER","Author"], "query": "", "sort": "" }
+    </content>
 
-<content id="template" type="x-handlebars-template">
-    <style>
-        .myRow {
-            padding: 25px;
+    <content id="translation" type="x-handlebars-translation">
+        {
+            "fr-FR" : {
+                "titleWebpart":"Titre du webpart :",
+                "authorCreated":"Créé par l'auteur ",
+                "authorModifiedBy":"- et la derniére modification par",
+                "btnLblPrev":"Précedent",
+                "btnLblNext":"Suivant"
+            },
+            "en-US" : {
+                "titleWebpart":"Web part title:",
+                "authorCreated":"Created by Author ",
+                "authorModifiedBy":"- and last modified by",
+                "btnLblPrev":"Previous",
+                "btnLblNext":"Next"
+            }
         }
+    </content>
 
-        .myRow a.disabled,
-        .myRow a.disabled:visited,
-        .myRow a.disabled:hover {
-            color: #a6a6a6;
-            text-decoration: none;
-        }
+    <content id="template" type="x-handlebars-template">
+        <style>
+            .myRow {
+                padding: 25px;
+            }
 
-    </style>
+            .myRow a.disabled,
+            .myRow a.disabled:visited,
+            .myRow a.disabled:hover {
+                color: #a6a6a6;
+                text-decoration: none;
+            }
+        </style>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script>
-        $(function () {
-            $('.myRow').css('background-color', '#c00000');
-        });
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script>
+            $(function () {
+                $('.myRow').css('background-color', '#c00000');
+            });
+        </script>
 
-    </script>
+        <div class="myRow ms-Grid-row ms-bgColor-blueDark ms-fontColor-white myRow">
+            <h1 class="ms-font-xl ms-fontColor-white">{{translation.titleWebpart}} {{wpTitle}}</h1>
 
-    <div class="myRow ms-Grid-row ms-bgColor-blueDark ms-fontColor-white myRow">
-        <h1 class="ms-font-xl ms-fontColor-white">Web part title: {{wpTitle}}</h1>
+            <ul>
+                {{#each items}}
+                <li>
+                    <a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> {{../translation.authorCreated}} {{splitDisplayNames Author}} {{#if LastModifiedTime}} {{../translation.authorModifiedBy}}
+                    {{splitSPUser EditorOWSUSER 'displayName'}} ({{moment LastModifiedTime lang=../locale format="dddd, DD MMMM
+                    YYYY"}}) {{/if}}</li>
+                {{/each}}
+            </ul>
 
-        <ul>
-            {{#each items}}
-
-            <li><a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> Created by Author => {{splitDisplayNames Author}}
-                {{#if LastModifiedTime}} - and last modified by {{splitSPUser EditorOWSUSER 'displayName'}} ({{moment LastModifiedTime
-                "DD/MM/YYYY"}}) {{/if}}</li>
-            {{/each}}
-        </ul>
-
-        <a id="prevPage" class="ms-fontColor-white" href="javascript:;">Previous</a> <a id="nextPage" class="ms-fontColor-white"
-            href="javascript:;">Next</a>
-    </div>
-</content>
+            <a id="prevPage" class="ms-fontColor-white" href="javascript:;">{{translation.btnLblPrev}}</a>
+            <a id="nextPage" class="ms-fontColor-white" href="javascript:;">{{translation.btnLblNext}}</a>
+        </div>
+    </content>

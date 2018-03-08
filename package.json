@@ -16,7 +16,6 @@
     "@types/webpack-env": ">=1.12.1 <1.14.0",
     "handlebars": "4.0.10",
     "handlebars-helpers": "0.8.2",
-    "handlebars-helper-moment": "0.2.0",
     "moment": "~2.20.1",
     "uuid": "3.1.0"
   },

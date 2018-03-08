@@ -96,6 +96,8 @@ The web part will automatically do the event binding.
 
 ![Paging controls](./assets/paging.png)
 
+Template can also have localization system, see [test.html](./templates/test.html) for exemple (moment and key/value exemple)
+
 ##### SharePoint Helpers
 
 There are a couple of custom SharePoint helpers available for you to make use of. The list of available SP helpers are:
