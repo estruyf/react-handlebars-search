@@ -1,6 +1,5 @@
 import * as Handlebars from 'handlebars';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
-import { toArray } from '@microsoft/sp-lodash-subset';
 
 /**
  * Various HB helpers
