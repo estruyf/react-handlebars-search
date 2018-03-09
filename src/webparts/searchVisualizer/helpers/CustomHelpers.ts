@@ -5,7 +5,7 @@ import HBVariousHelpers from './HBVariousHelpers';
 export default class CustomHelpers {
   public static init(_context: WebPartContext): void {
     // Register various helpers
-    HBVariousHelpers.init(_context);
+    HBVariousHelpers.init();
     // Register the SharePoint helpers
     HBSharePointHelpers.init(_context);
   }
