@@ -13,16 +13,17 @@ import * as strings from 'searchVisualizerStrings';
 import * as uuidv4 from 'uuid/v4';
 import CustomHelpers from '../helpers/CustomHelpers';
 
+
 export default class SearchVisualizer extends React.Component<ISearchVisualizerProps, ISearchVisualizerState> {
     private _searchService: SearchService;
     private _results: any[] = [];
     private _fields: string[] = [];
-    private _translation: string = "";
     private _templateMarkup: string = "";
     private _tmplDoc: Document;
     private _totalResults: number = 0;
     private _pageNr: number = 0;
     private _compId: string = "";
+    private _translation: string = "";
     private _locale: string = "en-US";
 
     constructor(props: ISearchVisualizerProps, state: ISearchVisualizerState) {
