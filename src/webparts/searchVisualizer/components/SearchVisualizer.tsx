@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as Handlebars from 'handlebars';
 
 import styles from './SearchVisualizer.module.scss';
-import { ISearchVisualizerProps, ISearchVisualizerState, IMetadata } from './ISearchVisualizerProps';
+import { ISearchVisualizerProps, ISearchVisualizerState, IMetadata, ITemplateResource } from './ISearchVisualizerProps';
 import { SPHttpClient } from "@microsoft/sp-http";
 import SPHttpClientResponse from "@microsoft/sp-http/lib/spHttpClient/SPHttpClientResponse";
 import executeScript from "../helpers/DangerousScriptLoader";
@@ -23,8 +23,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     private _totalResults: number = 0;
     private _pageNr: number = 0;
     private _compId: string = "";
-    private _translation: string = "";
-    private _locale: string = "en-US";
+    private _resources: ITemplateResource[] = [];
 
     constructor(props: ISearchVisualizerProps, state: ISearchVisualizerState) {
         super(props);
@@ -43,8 +42,6 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
             showError: false,
             showScriptDialog: false
         };
-
-        this._locale = props.context.pageContext.cultureInfo.currentUICultureName;
 
         // Bind "this" to the load template function
         this._loadTemplate = this._loadTemplate.bind(this);
@@ -122,16 +119,13 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
                     } else {
                         this._setDefaultMetadata();
                     }
+
+                    // Check if the metadata contains resources
+                    if (typeof metadata.resources !== "undefined") {
+                        this._resources = metadata.resources;
+                    }
                 } else {
                     this._setDefaultMetadata();
-                }
-
-                // Get translation
-                let translation = JSON.parse(this._tmplDoc.getElementById('translation').innerHTML);
-                if (translation !== null) {
-                    if (typeof translation !== "undefined") {
-                        this._translation = translation;
-                    }
                 }
 
                 // Get the template metadata
@@ -190,8 +184,27 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         const startRow = this._pageNr * this.props.maxResults;
         //  Get the search results and then bind it to the template
         this._searchService.get(this.props.query, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields).then((searchResp: ISearchResponse) => {
-            // Create the template values object
+            // Check which resources have to be loaded
+            const locale = this.props.context.pageContext.cultureInfo.currentUICultureName;
+            // Create a new resources object
+            const resources = {};
+            this._resources.forEach(resource => {
+                if (resource.key && resource.values) {
+                    let value = "";
+                    // Check if it contains a default value
+                    if (resource.values["default"]) {
+                        value = resource.values["default"];
+                    }
+                    // Check if a resource value exists for the current language
+                    if (resource.values[locale.toLowerCase()]) {
+                        value = resource.values[locale.toLowerCase()];
+                    }
+                    // Set the resource value
+                    resources[resource.key] = value;
+                }
+            });
 
+            // Create the template values object
             const tmplValues: any = {
                 wpTitle: this.props.title,
                 pageCtx: this.props.context.pageContext,
@@ -199,8 +212,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
                 totalResults: searchResp.totalResults,
                 totalResultsIncDuplicates: searchResp.totalResultsIncludingDuplicates,
                 calledUrl: searchResp.searchUrl,
-                translation:this._translation[this._locale],
-                locale: this._locale
+                resources: resources,
+                locale: locale
             };
 
             // Reload the new template
