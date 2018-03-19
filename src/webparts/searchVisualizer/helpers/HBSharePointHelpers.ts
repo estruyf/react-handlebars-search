@@ -26,7 +26,6 @@ export default class HBSharePointHelpers {
         if (displayNames == null && displayNames.indexOf(';') == -1) {
             return null;
         }
-
         return displayNames.split(';').join(", ");
     }
 
@@ -86,4 +85,5 @@ export default class HBSharePointHelpers {
         };
         return spurl[propertyRequested];
     }
+
 }
