@@ -1,60 +1,80 @@
 <content id="metadata" type="x-handlebars-metadata">
-        { "fields": ["Path", "LastModifiedTime", "Title","EditorOWSUSER","Author"], "query": "", "sort": "" }
-    </content>
-
-    <content id="translation" type="x-handlebars-translation">
-        {
-            "fr-FR" : {
-                "titleWebpart":"Titre du webpart :",
-                "authorCreated":"Créé par l'auteur ",
-                "authorModifiedBy":"- et la derniére modification par",
-                "btnLblPrev":"Précedent",
-                "btnLblNext":"Suivant"
+    {
+        "fields": ["Path", "LastModifiedTime", "Title","EditorOWSUSER","Author"],
+        "resources": [
+            {
+                "key": "titleWebpart",
+                "values": {
+                    "default": "Web part title:",
+                    "fr-FR": "Titre du webpart:"
+                }
             },
-            "en-US" : {
-                "titleWebpart":"Web part title:",
-                "authorCreated":"Created by Author ",
-                "authorModifiedBy":"- and last modified by",
-                "btnLblPrev":"Previous",
-                "btnLblNext":"Next"
+            {
+                "key": "authorCreated",
+                "values": {
+                    "default": "Created by Author ",
+                    "fr-FR": "Créé par l'auteur "
+                }
+            },
+            {
+                "key": "authorModifiedBy",
+                "values": {
+                    "default": "- and last modified by",
+                    "fr-FR": "- et la derniére modification par"
+                }
+            },
+            {
+                "key": "btnLblPrev",
+                "values": {
+                    "default": "Previous",
+                    "fr-FR": "Précedent"
+                }
+            },
+            {
+                "key": "btnLblNext",
+                "values": {
+                    "default": "Next",
+                    "fr-FR": "Suivant"
+                }
             }
+        ]
+    }
+</content>
+
+<content id="template" type="x-handlebars-template">
+    <style>
+        .myRow {
+            padding: 25px;
         }
-    </content>
 
-    <content id="template" type="x-handlebars-template">
-        <style>
-            .myRow {
-                padding: 25px;
-            }
+        .myRow a.disabled,
+        .myRow a.disabled:visited,
+        .myRow a.disabled:hover {
+            color: #a6a6a6;
+            text-decoration: none;
+        }
+    </style>
 
-            .myRow a.disabled,
-            .myRow a.disabled:visited,
-            .myRow a.disabled:hover {
-                color: #a6a6a6;
-                text-decoration: none;
-            }
-        </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        $(function () {
+            $('.myRow').css('background-color', '#c00000');
+        });
+    </script>
 
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-        <script>
-            $(function () {
-                $('.myRow').css('background-color', '#c00000');
-            });
-        </script>
+    <div class="myRow ms-Grid-row ms-bgColor-blueDark ms-fontColor-white myRow">
+        <h1 class="ms-font-xl ms-fontColor-white">{{resources.titleWebpart}} {{wpTitle}}</h1>
 
-        <div class="myRow ms-Grid-row ms-bgColor-blueDark ms-fontColor-white myRow">
-            <h1 class="ms-font-xl ms-fontColor-white">{{translation.titleWebpart}} {{wpTitle}}</h1>
+        <ul>
+            {{#each items}}
+            <li>
+                <a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> {{../resources.authorCreated}} {{splitDisplayNames Author}} {{#if LastModifiedTime}} {{../resources.authorModifiedBy}}
+                {{splitSPUser EditorOWSUSER 'displayName'}} ({{moment LastModifiedTime lang=../locale format="dddd, DD MMMM
+                YYYY"}}) {{/if}}</li>
+            {{/each}}
+        </ul>
 
-            <ul>
-                {{#each items}}
-                <li>
-                    <a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> {{../translation.authorCreated}} {{splitDisplayNames Author}} {{#if LastModifiedTime}} {{../translation.authorModifiedBy}}
-                    {{splitSPUser EditorOWSUSER 'displayName'}} ({{moment LastModifiedTime lang=../locale format="dddd, DD MMMM
-                    YYYY"}}) {{/if}}</li>
-                {{/each}}
-            </ul>
-
-            <a id="prevPage" class="ms-fontColor-white" href="javascript:;">{{translation.btnLblPrev}}</a>
-            <a id="nextPage" class="ms-fontColor-white" href="javascript:;">{{translation.btnLblNext}}</a>
-        </div>
-    </content>
+        <a id="prevPage" class="ms-fontColor-white" href="javascript:;">{{resources.btnLblPrev}}</a>
+        <a id="nextPage" class="ms-fontColor-white" href="javascript:;">{{resources.btnLblNext}}</a>
+    </div>
+</content>
