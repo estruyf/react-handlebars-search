@@ -1,6 +1,6 @@
 <content id="metadata" type="x-handlebars-metadata">
     {
-        "fields": ["Path", "LastModifiedTime", "Title","EditorOWSUSER","Author"],
+        "fields": ["Path", "LastModifiedTime", "Title","EditorOWSUSER","Author", "AuthorOWSUSER"],
         "resources": [
             {
                 "key": "titleWebpart",
@@ -67,9 +67,12 @@
 
         <ul>
             {{#each items}}
-            <li>
-                <a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> {{../resources.authorCreated}} {{splitDisplayNames Author}} {{#if LastModifiedTime}} {{../resources.authorModifiedBy}}
-                {{splitSPUser EditorOWSUSER 'displayName'}} ({{moment LastModifiedTime lang=../locale format="dddd, DD MMMM
+            <li class=" ms-fontColor-white">
+                <a href="{{Path}}" class="ms-fontColor-white ms-fontColor-neutralTertiaryAlt--hover">{{Title}}</a> {{../resources.authorCreated}}
+                <a href="{{first (split ../tenantUrl '.') 1}}-my.sharepoint.com/_layouts/15/me.aspx/?p={{splitSPUser AuthorOWSUSER 'email'}}&v=work" target="_blank" class="ms-fontWeight-semibold ms-fontColor-white ms-fontColor-neutralTertiaryAlt--hover">{{splitSPUser AuthorOWSUSER 'displayName'}}</a>
+                {{#if LastModifiedTime}} {{../resources.authorModifiedBy}}
+                <a href="{{first (split ../tenantUrl '.') 1}}-my.sharepoint.com/_layouts/15/me.aspx/?p={{splitSPUser EditorOWSUSER 'email'}}&v=work" target="_blank"  class="ms-fontWeight-semibold ms-fontColor-white ms-fontColor-neutralTertiaryAlt--hover">{{splitSPUser EditorOWSUSER 'displayName'}}</a>
+                ({{moment LastModifiedTime lang=../locale format="dddd, DD MMMM
                 YYYY"}}) {{/if}}</li>
             {{/each}}
         </ul>
