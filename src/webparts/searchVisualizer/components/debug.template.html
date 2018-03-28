@@ -56,22 +56,20 @@
             <p class="ms-font-l">Web part details</p>
             <ul>
                 <li>Web part title
-                    <code ng-non-bindable>{
-                        <!---->{wpTitle}
-                        <!---->}</code>:
+                    <code ng-non-bindable>{<!---->{wpTitle}<!---->}</code>:
                     <strong>{{wpTitle}}</strong>
                 </li>
                 <li>Current user
-                    <code ng-non-bindable>{
-                        <!---->{pageCtx.user.displayName}
-                        <!---->}</code>:
+                    <code ng-non-bindable>{<!---->{pageCtx.user.displayName}<!---->}</code>:
                     <strong>{{pageCtx.user.displayName}}</strong>
                 </li>
                 <li>Search API URL
-                    <code ng-non-bindable>{
-                        <!---->{calledUrl}
-                        <!---->}</code>:
+                    <code ng-non-bindable>{<!---->{calledUrl}<!---->}</code>:
                     <strong>{{calledUrl}}</strong>
+                </li>
+                <li>Tenant URL
+                    <code ng-non-bindable>{<!---->{tenantUrl}<!---->}</code>:
+                    <strong>{{tenantUrl}}</strong>
                 </li>
                 <li>Total results in the set:
                     <strong>{{items.length}}</strong>

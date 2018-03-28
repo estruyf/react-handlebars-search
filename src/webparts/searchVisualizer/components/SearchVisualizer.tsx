@@ -186,6 +186,10 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         this._searchService.get(this.props.query, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields).then((searchResp: ISearchResponse) => {
             // Check which resources have to be loaded
             const locale = this.props.context.pageContext.cultureInfo.currentUICultureName;
+
+            // Get tenant URL
+            let tenantUrl = window.location.protocol + "//" + window.location.host;
+
             // Create a new resources object
             const resources = {};
             this._resources.forEach(resource => {
@@ -213,7 +217,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
                 totalResultsIncDuplicates: searchResp.totalResultsIncludingDuplicates,
                 calledUrl: searchResp.searchUrl,
                 resources: resources,
-                locale: locale
+                locale: locale,
+                tenantUrl: tenantUrl
             };
 
             // Reload the new template
