@@ -70,7 +70,7 @@ $colors: (
 
 :global {
     // Fix for theme color
-    .ms-Fabric--v6-0-0 {
+    html .ms-Fabric--v6-0-0 {
         @each $name, $color-value in $colors {
             .ms-fontColor-#{$name} {
                 color: $color-value;
