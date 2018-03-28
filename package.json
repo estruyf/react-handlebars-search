@@ -6,8 +6,8 @@
     "node": ">=0.10.0"
   },
   "dependencies": {
-    "@microsoft/sp-core-library": "~1.4.0",
-    "@microsoft/sp-webpart-base": "~1.4.0",
+    "@microsoft/sp-core-library": "~1.4.1",
+    "@microsoft/sp-webpart-base": "~1.4.1",
     "@types/handlebars": "4.0.33",
     "react": "15.6.2",
     "react-dom": "15.6.2",
@@ -20,9 +20,9 @@
     "uuid": "3.1.0"
   },
   "devDependencies": {
-    "@microsoft/sp-build-web": "~1.4.0",
-    "@microsoft/sp-module-interfaces": "~1.4.0",
-    "@microsoft/sp-webpart-workbench": "~1.4.0",
+    "@microsoft/sp-build-web": "~1.4.1",
+    "@microsoft/sp-module-interfaces": "~1.4.1",
+    "@microsoft/sp-webpart-workbench": "~1.4.1",
     "@types/chai": ">=3.4.34 <3.6.0",
     "@types/mocha": ">=2.2.33 <2.6.0",
     "@types/uuid": "^3.4.2",

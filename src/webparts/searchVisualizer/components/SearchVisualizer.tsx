@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as Handlebars from 'handlebars';
 
 import styles from './SearchVisualizer.module.scss';
-import { ISearchVisualizerProps, ISearchVisualizerState, IMetadata } from './ISearchVisualizerProps';
+import { ISearchVisualizerProps, ISearchVisualizerState, IMetadata, ITemplateResource } from './ISearchVisualizerProps';
 import { SPHttpClient } from "@microsoft/sp-http";
 import SPHttpClientResponse from "@microsoft/sp-http/lib/spHttpClient/SPHttpClientResponse";
 import executeScript from "../helpers/DangerousScriptLoader";
@@ -13,6 +13,7 @@ import * as strings from 'searchVisualizerStrings';
 import * as uuidv4 from 'uuid/v4';
 import CustomHelpers from '../helpers/CustomHelpers';
 
+
 export default class SearchVisualizer extends React.Component<ISearchVisualizerProps, ISearchVisualizerState> {
     private _searchService: SearchService;
     private _results: any[] = [];
@@ -22,6 +23,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     private _totalResults: number = 0;
     private _pageNr: number = 0;
     private _compId: string = "";
+    private _resources: ITemplateResource[] = [];
 
     constructor(props: ISearchVisualizerProps, state: ISearchVisualizerState) {
         super(props);
@@ -117,6 +119,11 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
                     } else {
                         this._setDefaultMetadata();
                     }
+
+                    // Check if the metadata contains resources
+                    if (typeof metadata.resources !== "undefined") {
+                        this._resources = metadata.resources;
+                    }
                 } else {
                     this._setDefaultMetadata();
                 }
@@ -177,6 +184,30 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         const startRow = this._pageNr * this.props.maxResults;
         //  Get the search results and then bind it to the template
         this._searchService.get(this.props.query, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields).then((searchResp: ISearchResponse) => {
+            // Check which resources have to be loaded
+            const locale = this.props.context.pageContext.cultureInfo.currentUICultureName;
+
+            // Get tenant URL
+            let tenantUrl = window.location.protocol + "//" + window.location.host;
+
+            // Create a new resources object
+            const resources = {};
+            this._resources.forEach(resource => {
+                if (resource.key && resource.values) {
+                    let value = "";
+                    // Check if it contains a default value
+                    if (resource.values["default"]) {
+                        value = resource.values["default"];
+                    }
+                    // Check if a resource value exists for the current language
+                    if (resource.values[locale.toLowerCase()]) {
+                        value = resource.values[locale.toLowerCase()];
+                    }
+                    // Set the resource value
+                    resources[resource.key] = value;
+                }
+            });
+
             // Create the template values object
             const tmplValues: any = {
                 wpTitle: this.props.title,
@@ -184,7 +215,10 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
                 items: searchResp.results,
                 totalResults: searchResp.totalResults,
                 totalResultsIncDuplicates: searchResp.totalResultsIncludingDuplicates,
-                calledUrl: searchResp.searchUrl
+                calledUrl: searchResp.searchUrl,
+                resources: resources,
+                locale: locale,
+                tenantUrl: tenantUrl
             };
 
             // Reload the new template

@@ -1,5 +1,44 @@
 <content id="metadata" type="x-handlebars-metadata">
-    { "fields": ["Path", "LastModifiedTime", "Title","EditorOWSUSER","Author"], "query": "", "sort": "" }
+    {
+        "fields": ["Path", "LastModifiedTime", "Title","EditorOWSUSER","Author", "AuthorOWSUSER"],
+        "resources": [
+            {
+                "key": "titleWebpart",
+                "values": {
+                    "default": "Web part title:",
+                    "fr-FR": "Titre du webpart:"
+                }
+            },
+            {
+                "key": "authorCreated",
+                "values": {
+                    "default": "Created by Author ",
+                    "fr-FR": "Créé par l'auteur "
+                }
+            },
+            {
+                "key": "authorModifiedBy",
+                "values": {
+                    "default": "- and last modified by",
+                    "fr-FR": "- et la derniére modification par"
+                }
+            },
+            {
+                "key": "btnLblPrev",
+                "values": {
+                    "default": "Previous",
+                    "fr-FR": "Précedent"
+                }
+            },
+            {
+                "key": "btnLblNext",
+                "values": {
+                    "default": "Next",
+                    "fr-FR": "Suivant"
+                }
+            }
+        ]
+    }
 </content>
 
 <content id="template" type="x-handlebars-template">
@@ -14,7 +53,6 @@
             color: #a6a6a6;
             text-decoration: none;
         }
-
     </style>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -22,22 +60,24 @@
         $(function () {
             $('.myRow').css('background-color', '#c00000');
         });
-
     </script>
 
     <div class="myRow ms-Grid-row ms-bgColor-blueDark ms-fontColor-white myRow">
-        <h1 class="ms-font-xl ms-fontColor-white">Web part title: {{wpTitle}}</h1>
+        <h1 class="ms-font-xl ms-fontColor-white">{{resources.titleWebpart}} {{wpTitle}}</h1>
 
         <ul>
             {{#each items}}
-
-            <li><a href="{{Path}}" class="ms-fontColor-white">{{Title}}</a> Created by Author => {{splitDisplayNames Author}}
-                {{#if LastModifiedTime}} - and last modified by {{splitSPUser EditorOWSUSER 'displayName'}} ({{moment LastModifiedTime
-                "DD/MM/YYYY"}}) {{/if}}</li>
+            <li class=" ms-fontColor-white">
+                <a href="{{Path}}" class="ms-fontColor-white ms-fontColor-neutralTertiaryAlt--hover">{{Title}}</a> {{../resources.authorCreated}}
+                <a href="{{first (split ../tenantUrl '.') 1}}-my.sharepoint.com/_layouts/15/me.aspx/?p={{splitSPUser AuthorOWSUSER 'email'}}&v=work" target="_blank" class="ms-fontWeight-semibold ms-fontColor-white ms-fontColor-neutralTertiaryAlt--hover">{{splitSPUser AuthorOWSUSER 'displayName'}}</a>
+                {{#if LastModifiedTime}} {{../resources.authorModifiedBy}}
+                <a href="{{first (split ../tenantUrl '.') 1}}-my.sharepoint.com/_layouts/15/me.aspx/?p={{splitSPUser EditorOWSUSER 'email'}}&v=work" target="_blank"  class="ms-fontWeight-semibold ms-fontColor-white ms-fontColor-neutralTertiaryAlt--hover">{{splitSPUser EditorOWSUSER 'displayName'}}</a>
+                ({{moment LastModifiedTime lang=../locale format="dddd, DD MMMM
+                YYYY"}}) {{/if}}</li>
             {{/each}}
         </ul>
 
-        <a id="prevPage" class="ms-fontColor-white" href="javascript:;">Previous</a> <a id="nextPage" class="ms-fontColor-white"
-            href="javascript:;">Next</a>
+        <a id="prevPage" class="ms-fontColor-white" href="javascript:;">{{resources.btnLblPrev}}</a>
+        <a id="nextPage" class="ms-fontColor-white" href="javascript:;">{{resources.btnLblNext}}</a>
     </div>
 </content>

@@ -23,6 +23,16 @@ export interface ISearchVisualizerState {
 
 export interface IMetadata {
     fields: string[];
+    resources: ITemplateResource[];
+}
+
+export interface ITemplateResource {
+    key: string;
+    values: ILocaleResource;
+}
+
+export interface ILocaleResource {
+    [locale: string]: string;
 }
 
 export interface ISPUser {

@@ -1,5 +1,7 @@
 <content id="metadata" type="x-handlebars-metadata">
-    { "fields": [] }
+    {
+        "fields": []
+    }
 </content>
 
 <content id="template" type="x-handlebars-template">
@@ -53,12 +55,33 @@
         <div>
             <p class="ms-font-l">Web part details</p>
             <ul>
-                <li>Web part title <code ng-non-bindable>{<!---->{wpTitle}<!---->}</code>: <strong>{{wpTitle}}</strong></li>
-                <li>Current user <code ng-non-bindable>{<!---->{pageCtx.user.displayName}<!---->}</code>: <strong>{{pageCtx.user.displayName}}</strong></li>
-                <li>Search API URL <code ng-non-bindable>{<!---->{calledUrl}<!---->}</code>: <strong>{{calledUrl}}</strong></li>
-                <li>Total results in the set: <strong>{{items.length}}</strong></li>
-                <li>Total results for the query: <strong>{{totalResults}}</strong></li>
-                <li>Total results including duplicates: <strong>{{totalResultsIncDuplicates}}</strong></li>
+                <li>Web part title
+                    <code ng-non-bindable>{
+                        <!---->{wpTitle}
+                        <!---->}</code>:
+                    <strong>{{wpTitle}}</strong>
+                </li>
+                <li>Current user
+                    <code ng-non-bindable>{
+                        <!---->{pageCtx.user.displayName}
+                        <!---->}</code>:
+                    <strong>{{pageCtx.user.displayName}}</strong>
+                </li>
+                <li>Search API URL
+                    <code ng-non-bindable>{
+                        <!---->{calledUrl}
+                        <!---->}</code>:
+                    <strong>{{calledUrl}}</strong>
+                </li>
+                <li>Total results in the set:
+                    <strong>{{items.length}}</strong>
+                </li>
+                <li>Total results for the query:
+                    <strong>{{totalResults}}</strong>
+                </li>
+                <li>Total results including duplicates:
+                    <strong>{{totalResultsIncDuplicates}}</strong>
+                </li>
             </ul>
         </div>
         <div>
@@ -78,10 +101,22 @@
                 <p class="ms-font-l">Result {{add @index 1}}</p>
                 {{#each this}}
                 <div class="property">
-                    <p>Field name: <span class="value">"{{@key}}"</span></p>
-                    <p>Field value: <span class="value">"{{this}}"</span></p>
-                    <p>Field type: <span class="value">"{{typeof this}}"</span></p>
-                    <p>Field usage: <span class="value"><span>{<!---->{</span>{{@key}}<span>}<!---->}</span></span>
+                    <p>Field name:
+                        <span class="value">"{{@key}}"</span>
+                    </p>
+                    <p>Field value:
+                        <span class="value">"{{this}}"</span>
+                    </p>
+                    <p>Field type:
+                        <span class="value">"{{typeof this}}"</span>
+                    </p>
+                    <p>Field usage:
+                        <span class="value">
+                            <span>{
+                                <!---->{</span>{{@key}}
+                            <span>}
+                                <!---->}</span>
+                        </span>
                     </p>
                 </div>
                 {{/each}}

@@ -26,7 +26,6 @@ export default class HBSharePointHelpers {
         if (displayNames == null && displayNames.indexOf(';') == -1) {
             return null;
         }
-
         return displayNames.split(';').join(", ");
     }
 
@@ -42,10 +41,11 @@ export default class HBSharePointHelpers {
 
         const retValue: string[] = [];
         let userFieldValueArray = userFieldValue.split(';').forEach(user => {
-            let userValues = user.split(' | ');
+            let userValues = user.split('|');
             let spuser: ISPUser = {
                 displayName: userValues[1],
-                email: userValues[0]
+                email: userValues[0],
+                username: userValues[userValues.length-1]
             };
             retValue.push(spuser[propertyRequested]);
         });
@@ -86,4 +86,5 @@ export default class HBSharePointHelpers {
         };
         return spurl[propertyRequested];
     }
+
 }
