@@ -74,19 +74,19 @@ $colors: (
         @each $name, $color-value in $colors {
             .ms-fontColor-#{$name} {
                 color: $color-value;
-                &--hover {
+                &--hover:hover {
                     color: $color-value;
                 }
             }
             .ms-bgColor-#{$name} {
                 background-color: $color-value;
-                &--hover {
+                &--hover:hover {
                     background-color: $color-value;
                 }
             }
             .ms-borderColor-#{$name} {
                 border-color: $color-value;
-                &--hover {
+                &--hover:hover {
                     border-color: $color-value;
                 }
             }
