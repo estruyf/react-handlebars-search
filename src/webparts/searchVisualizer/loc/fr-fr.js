@@ -5,7 +5,7 @@ define([], function () {
         'TemplateGroupName': 'Paramètres du template',
         'TitleFieldLabel': 'Titre du WebPart ',
         'QueryFieldLabel': 'Précisez votre requête de recherche',
-        'QueryFieldDescription': 'Vous pouvez utiliser les tokens suivants: {Site} - {SiteCollection} - {Today} ou {Today + NR} ou {Today-NR} - {CurrentDisplayLanguage} - {User}, {User.Name}, {User.Email } ',
+        'QueryFieldDescription': 'Vous pouvez utiliser les tokens suivants: {Site} - {SiteCollection} - {CurrentPage} - {Today} ou {Today + NR} ou {Today-NR} - {CurrentDisplayLanguage} - {User}, {User.Name}, {User.Email } ',
         'FieldsMaxResults': 'Nombre de résultats à afficher',
         'SortingFieldLabel': 'Tri (MP:ascending or descending) - exemple: lastmodifiedtime:ascending,author:descending',
         'DebugFieldLabel': 'Afficher la sortie de débogage ?',
