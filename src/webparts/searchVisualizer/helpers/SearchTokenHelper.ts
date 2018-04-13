@@ -38,7 +38,6 @@ export default class SearchTokenHelper {
                             break;
                         case "{currentpage}":
                             restUrl = restUrl.replace(/{currentpage}/ig, (window.location.pathname).replace(/\..+$/, ''));
-                            console.log(restUrl);
                             break;
                     }
                 }
