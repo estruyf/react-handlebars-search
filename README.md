@@ -33,7 +33,6 @@ In the query field, you can enter your own queries like:
 But you can also use search tokens like:
 - `{Site}`
 - `{SiteCollection}`
-- `{CurrentPage}`
 - `{Today}` or `{Today+Number}` or `{Today-Number}`
 - `{CurrentDisplayLanguage}`
 - `{User}`

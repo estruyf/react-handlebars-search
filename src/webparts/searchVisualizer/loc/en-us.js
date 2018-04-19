@@ -5,7 +5,7 @@ define([], function () {
         'TemplateGroupName': 'Template settings',
         'TitleFieldLabel': 'Web part title',
         'QueryFieldLabel': 'Specify your search query',
-        'QueryFieldDescription': 'You can make use of following tokens: {Site} - {SiteCollection} - {CurrentPage} - {Today} or {Today+NR} or {Today-NR} - {CurrentDisplayLanguage} - {User}, {User.Name}, {User.Email}',
+        'QueryFieldDescription': 'You can make use of following tokens: {Site} - {SiteCollection} - {Today} or {Today+NR} or {Today-NR} - {CurrentDisplayLanguage} - {User}, {User.Name}, {User.Email}',
         'FieldsMaxResults': 'Number of results to render',
         'SortingFieldLabel': 'Sorting (MP:ascending or descending) - example: lastmodifiedtime:ascending,author:descending',
         'DebugFieldLabel': 'Show debug output?',

@@ -36,9 +36,6 @@ export default class SearchTokenHelper {
                         case "{currentdisplaylanguage}":
                             restUrl = restUrl.replace(/{currentdisplaylanguage}/ig, this._context.pageContext.cultureInfo.currentCultureName);
                             break;
-                        case "{currentpage}":
-                            restUrl = restUrl.replace(/{currentpage}/ig, (window.location.pathname).replace(/\..+$/, ''));
-                            break;
                     }
                 }
             });
