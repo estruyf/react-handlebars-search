@@ -201,7 +201,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
      * Retrieves user profile properties
      */
     private _getUserProfileProperties(): Promise<any> {
-        return this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/sp.userprofiles.peoplemanager/getmyproperties'`, SPHttpClient.configurations.v1)
+        return this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/sp.userprofiles.peoplemanager/getmyproperties`, SPHttpClient.configurations.v1)
             .then((response: SPHttpClientResponse) => {
                 return response.json();
             }).catch(error => {
