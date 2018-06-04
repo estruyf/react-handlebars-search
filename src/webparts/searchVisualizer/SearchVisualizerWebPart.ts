@@ -83,7 +83,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                                 PropertyPaneSlider('maxResults', {
                                     label: strings.FieldsMaxResults,
                                     min: 1,
-                                    max: 500
+                                    max: 50
                                 }),
                                 PropertyPaneTextField('sorting', {
                                     label: strings.SortingFieldLabel
