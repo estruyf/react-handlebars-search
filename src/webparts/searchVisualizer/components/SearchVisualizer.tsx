@@ -183,7 +183,8 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     private _processResults() {
         const startRow = this._pageNr * this.props.maxResults;
         //  Get the search results and then bind it to the template
-        this._searchService.get(this.props.query, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields).then((searchResp: ISearchResponse) => {
+        
+        this._searchService.get(this.props.query, this.props.audienceTargeting, this.props.audienceTargetingAll, this.props.audienceTargetingBooleanOperator, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields).then((searchResp: ISearchResponse) => {
             // Check which resources have to be loaded
             const locale = this.props.context.pageContext.cultureInfo.currentUICultureName;
 
