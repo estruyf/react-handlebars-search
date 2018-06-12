@@ -1,7 +1,10 @@
+import { IUserProfileProperty } from './IUserProfileProperty';
+import { USERPROFILE_KEY } from './../SearchVisualizerWebPart';
 import { ISearchResults, ICells, ICellValue, ISearchResponse } from './ISearchService';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import SearchTokenHelper from "../helpers/SearchTokenHelper";
+import { IAudienceProperty } from './IAudienceProperty';
 
 export default class SearchService {
     private _tokenHelper: SearchTokenHelper;
@@ -103,52 +106,68 @@ export default class SearchService {
         });
     }
 
-
+    /**
+     * Adds audience targetting support to the query
+     *
+     * @param audienceTargeting
+     * @param audienceTargetingAll
+     * @param audienceTargetingBooleanOperator
+     */
     private BuildAudienceQuery(audienceTargeting: string, audienceTargetingAll: string, audienceTargetingBooleanOperator: string): string {
-        if (sessionStorage.userProfileData) {
-            let properties: Array<object> = JSON.parse(sessionStorage.userProfileData);
+        // Check session storage for user profile data
+        if (window.sessionStorage) {
+            const userProfileData = sessionStorage.getItem(USERPROFILE_KEY);
+            if (userProfileData) {
+                let properties: IUserProfileProperty[] = JSON.parse(userProfileData);
 
-            let columnMapping: object = JSON.parse(audienceTargetingAll);
-            let managedPropertyName: string = Object.keys(columnMapping)[0];
-            let managedPropertyValue: string = columnMapping[managedPropertyName];
+                let columnMapping: IAudienceProperty = JSON.parse(audienceTargetingAll);
+                let managedPropertyName: string = Object.keys(columnMapping)[0];
+                let managedPropertyValue: string = columnMapping[managedPropertyName];
 
-            let baseAudienceQuery: string = `${managedPropertyName}="${managedPropertyValue}"`;
+                let baseAudienceQuery: string = `${managedPropertyName}="${managedPropertyValue}"`;
 
-            let targets: Array<string> = audienceTargeting.split('\n');
+                let targets: string[] = audienceTargeting.split('\n');
 
-            let audienceQuery: string = '';
-            for (let i: number = 0, max = targets.length; i < max; i++) {
-                columnMapping = JSON.parse(targets[i]);
+                let audienceQuery: string = '';
+                for (let i: number = 0, max = targets.length; i < max; i++) {
+                    columnMapping = JSON.parse(targets[i]);
 
-                managedPropertyName = Object.keys(columnMapping)[0];
-                let userProfilePropertyName: string = columnMapping[managedPropertyName];
+                    managedPropertyName = Object.keys(columnMapping)[0];
+                    let userProfilePropertyName: string = columnMapping[managedPropertyName];
 
-                let property: object = this.FilterUserProfileProperties(properties, userProfilePropertyName);
-                if (property && property["Value"]) {
-                    audienceQuery = `${audienceQuery}${managedPropertyName}="${property["Value"]}"`;
+                    let property: IUserProfileProperty = this.FilterUserProfileProperties(properties, userProfilePropertyName);
+                    if (property && property.Value) {
+                        audienceQuery = `${audienceQuery}${managedPropertyName}="${property.Value}"`;
 
-                    if (i + 1 < max) {
-                        audienceQuery = `${audienceQuery} ${audienceTargetingBooleanOperator} `;
-                    } else {
-                        audienceQuery = `${audienceQuery}`;
+                        if (i + 1 < max) {
+                            audienceQuery = `${audienceQuery} ${audienceTargetingBooleanOperator} `;
+                        } else {
+                            audienceQuery = `${audienceQuery}`;
+                        }
                     }
                 }
+                return audienceQuery ? `(${baseAudienceQuery} OR (${audienceQuery}))` : `(${baseAudienceQuery})`;
             }
-            return audienceQuery ? `(${baseAudienceQuery} OR (${audienceQuery}))` : `(${baseAudienceQuery})`;
-        } else {
-            return "";
         }
+        return "";
     }
 
 
-    private FilterUserProfileProperties(properties: Array<object>, propertyName: string): object {
+    /**
+     * Retrieves the User Profile property based on the key value
+     *
+     * @param properties
+     * @param propertyName
+     */
+    private FilterUserProfileProperties(properties: IUserProfileProperty[], propertyName: string): IUserProfileProperty {
         for (var i = 0, len = properties.length; i < len; i++) {
-            if (properties[i]["Key"] === propertyName) {
+            if (properties[i].Key === propertyName) {
                 return properties[i];
             }
         }
         return null;
     }
+
 
     /**
      * Retrieve the results from the search API

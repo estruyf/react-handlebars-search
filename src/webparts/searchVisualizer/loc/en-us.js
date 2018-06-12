@@ -2,7 +2,7 @@ define([], function () {
     return {
         'PropertyPaneDescription': 'Search Web Part Settings',
         'QueryGroupName': 'Search query settings',
-        'AudienceGroupName': 'Audience Targeting settings',
+        'AudienceGroupName': 'Audience targeting settings',
         'TemplateGroupName': 'Template settings',
         'TitleFieldLabel': 'Web part title',
         'QueryFieldLabel': 'Specify your search query',

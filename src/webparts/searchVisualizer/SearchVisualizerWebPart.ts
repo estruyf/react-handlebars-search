@@ -17,6 +17,8 @@ import { ISearchVisualizerWebPartProps } from './ISearchVisualizerWebPartProps';
 import { SPComponentLoader } from '@microsoft/sp-loader';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 
+export const USERPROFILE_KEY = 'SearchVisualizerWebPart:UserProfileData';
+
 export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISearchVisualizerWebPartProps> {
     constructor() {
         super();
@@ -45,11 +47,12 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
         );
         let domElement: HTMLElement = this.domElement;
 
-        if (this.properties.audienceColumnMapping && this.properties.audienceColumnAllValue && !sessionStorage.userProfileData) {
+        const userProfileData = window.sessionStorage ? sessionStorage.getItem(USERPROFILE_KEY) : null;
+        if (this.properties.audienceColumnMapping && this.properties.audienceColumnAllValue && !userProfileData && window.sessionStorage) {
             // get user profile properties if not in session storage and then process search results
             this._getUserProfileProperties().then((result) => {
                 if (result.UserProfileProperties) {
-                    sessionStorage.setItem('userProfileData', JSON.stringify(result.UserProfileProperties));
+                    sessionStorage.setItem(USERPROFILE_KEY, JSON.stringify(result.UserProfileProperties));
                 }
                 ReactDom.render(element, domElement);
             });
@@ -202,11 +205,10 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
      */
     private _getUserProfileProperties(): Promise<any> {
         return this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/sp.userprofiles.peoplemanager/getmyproperties`, SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse) => {
-                return response.json();
-            }).catch(error => {
-                return Promise.reject(JSON.stringify(error));
-            });
+        .then((response: SPHttpClientResponse) => {
+            return response.json();
+        }).catch(error => {
+            return Promise.reject(JSON.stringify(error));
+        });
     }
-
 }

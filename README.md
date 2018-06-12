@@ -101,6 +101,8 @@ Template can also have localization system, see [test.html](./templates/test.htm
 ##### SharePoint Helpers
 
 There are a couple of custom SharePoint helpers available for you to make use of. The list of available SP helpers are:
+- `siteCollectionUrl`: returns the URL of the current site collection
+- `siteUrl`: returns the URL of the current site
 - `splitDisplayNames`: (input => "user1;user2;user3") (common example is the author field)
 - `splitSPUser`: (input => "email | displayname | .... i:0#.f|membership|username") (common example is the editor field)
 - `splitSPTaxonomy`: (input => "GP0|#4586d598-0685-4fdc-bd99-b9eed3cea791;L0|#04586d598-0685-4fdc-bd99-b9eed3cea791|MyTerm;GTSet|#e961b817-850b-4898-9dd7-12409669d2fe")
@@ -108,6 +110,8 @@ There are a couple of custom SharePoint helpers available for you to make use of
 
 They can be use in the template as follows:
 ```html
+{{siteCollectionUrl}}
+{{siteUrl}}
 {{splitDisplayNames Author}}
 {{splitSPUser EditorOWSUSER 'displayName'}}
 {{splitSPTaxonomy owstaxIdmytaxonomy}}
@@ -121,3 +125,23 @@ With this setting you can specify if you want to execute/load the script that ar
 ![Script loading warning](./assets/script-loading.png)
 
 > By default this setting is disabled.
+
+### Audience targeting settings
+
+Inside the audience targeting settings you can target content based on a users profile property.
+
+![Audience targeting](./assets/audience-targeting.png)
+
+#### Audience Managed Property to User Profile Property Mapping
+
+In this setting you define which managed property and user profile property you want to bind. For example: `{"RefinableString00":"Department"}`. The web part will look into the user its profile properties, if it finds it, it will get added to the search call: `RefinableString00="IT"`.
+
+> Multiple properties are possible, add each mapping on a separate line.
+
+#### Select the boolean operator for the above mappings
+
+Specifies the operator between the above settings. 
+
+#### Audience managed property value to indicate content targeted to everyone
+
+This can be used to include content audience targeting which should be visible for everyone.
