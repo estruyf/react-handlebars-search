@@ -2,6 +2,7 @@ declare interface ISearchVisualizerStrings {
     /* Fields */
     PropertyPaneDescription: string;
     QueryGroupName: string;
+    AudienceGroupName: string;
     TemplateGroupName: string;
     TitleFieldLabel: string;
     QueryFieldLabel: string;
@@ -21,6 +22,11 @@ declare interface ISearchVisualizerStrings {
     PrivateGroupsFieldLabel: string;
     PrivateGroupsFieldLabelOn: string;
     PrivateGroupsFieldLabelOff: string;
+    AudienceColumnMappingLabel: string;
+    AudienceColumnMappingDescription: string;
+    AudienceAllValueLabel: string;
+    AudienceAllValueDescription: string;
+    AudienceBooleanOperatorLabel: string;
 
     /* Validation */
     QuertValidationEmpty: string;

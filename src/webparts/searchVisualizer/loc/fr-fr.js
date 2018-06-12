@@ -2,6 +2,7 @@ define([], function () {
     return {
         'PropertyPaneDescription': 'Configuration du WebPart',
         'QueryGroupName': 'Paramètres de requête de recherche',
+        'AudienceGroupName': 'Paramètres de ciblage d\'audience',
         'TemplateGroupName': 'Paramètres du template',
         'TitleFieldLabel': 'Titre du WebPart ',
         'QueryFieldLabel': 'Précisez votre requête de recherche',
@@ -21,6 +22,11 @@ define([], function () {
         'PrivateGroupsFieldLabel': 'Rechercher dans le contenu des groupes privés ?',
         'PrivateGroupsFieldLabelOn': 'Oui',
         'PrivateGroupsFieldLabelOff': 'Non, seulement les groupes publics',
+        'AudienceColumnMappingLabel': 'Propriété gérée par l\'audience au mappage de propriété de profil utilisateur',
+        'AudienceColumnMappingDescription': 'Sur chaque ligne, associez chaque propriété gérée par l\'audience à la propriété de profil utilisateur correspondante.Exemple: {"ManagedPropertyAlias":"UserProfileProperty"}',
+        'AudienceAllValueLabel': 'Valeur de la colonne Site public pour indiquer le contenu destiné à tous',
+        'AudienceAllValueDescription': 'Entrez la propriété gérée et sa valeur qui indiquera quel contenu est ciblé pour tout le monde. Exemple: {"ManagedPropertyAlias":"All"}',
+        'AudienceBooleanOperatorLabel': 'Sélectionnez l\'opérateur booléen pour les mappages ci- dessus',
 
         'QuertValidationEmpty': 'Veuillez spécifier une requête de recherche',
         'TemplateValidationEmpty': 'Veuillez spécifier l\URL de votre template',

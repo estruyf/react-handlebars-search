@@ -8,6 +8,8 @@ export default class HBSharePointHelpers {
         Handlebars.registerHelper('splitSPUser', this._splitSPUser);
         Handlebars.registerHelper('splitSPTaxonomy', this._splitSPTaxonomy);
         Handlebars.registerHelper('splitSPUrl', this._splitSPUrl);
+        Handlebars.registerHelper('siteCollectionUrl', this._getSiteCollectionUrl);
+        Handlebars.registerHelper('siteUrl', this._getSiteUrl);
     }
 
     /**
@@ -87,4 +89,22 @@ export default class HBSharePointHelpers {
         return spurl[propertyRequested];
     }
 
+
+    /**
+     * SharePoint helper to return the current site collection url
+     * @param urlFieldValue
+     * @param propertyRequested
+     */
+    private _getSiteCollectionUrl = () => {
+        return this._context.pageContext.site.absoluteUrl;
+    }    
+
+    /**
+     * SharePoint helper to return the current site url
+     * @param urlFieldValue
+     * @param propertyRequested
+     */
+    private _getSiteUrl = () => {
+        return this._context.pageContext.web.absoluteUrl;
+    }    
 }

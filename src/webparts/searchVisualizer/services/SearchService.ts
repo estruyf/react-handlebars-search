@@ -1,7 +1,10 @@
+import { IUserProfileProperty } from './IUserProfileProperty';
+import { USERPROFILE_KEY } from './../SearchVisualizerWebPart';
 import { ISearchResults, ICells, ICellValue, ISearchResponse } from './ISearchService';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import SearchTokenHelper from "../helpers/SearchTokenHelper";
+import { IAudienceProperty } from './IAudienceProperty';
 
 export default class SearchService {
     private _tokenHelper: SearchTokenHelper;
@@ -19,14 +22,22 @@ export default class SearchService {
      * @param sorting
      * @param fields
      */
-    public get(query: string, maxResults: number, sorting: string, duplicates: boolean, privateGroups: boolean, startRow: number, fields: string[] = []) {
+    public get(query: string, audienceTargeting: string, audienceTargetingAll: string, audienceTargetingBooleanOperator: string, maxResults: number, sorting: string, duplicates: boolean, privateGroups: boolean, startRow: number, fields: string[] = []) {
         return new Promise<ISearchResponse>((resolve, reject) => {
             let totalResults: number = null;
             let totalRowsIncludingDuplicates: number = null;
 
             let url: string = this._context.pageContext.web.absoluteUrl + "/_api/search/query?querytext=";
+
+            // check for audience targeting
+            let audienceQuery: string = '';
+            if (!this._isEmptyString(audienceTargeting) && !this._isEmptyString(audienceTargetingAll)) {
+                audienceQuery = this.BuildAudienceQuery(audienceTargeting, audienceTargetingAll, audienceTargetingBooleanOperator);
+            }
+
             // Check if a query is provided
-            url += !this._isEmptyString(query) ? `'${this._tokenHelper.replaceTokens(query)}'` : "'*'";
+            url += !this._isEmptyString(query) ? `'${this._tokenHelper.replaceTokens(query)} ${audienceQuery}'` : "'*'";
+
             // Check if there are fields provided
             if (!this._isEmptyString(fields.join(','))) {
                 url += `&selectproperties='${fields}'`;
@@ -94,6 +105,69 @@ export default class SearchService {
             }).catch((error: string) => reject(error));
         });
     }
+
+    /**
+     * Adds audience targetting support to the query
+     *
+     * @param audienceTargeting
+     * @param audienceTargetingAll
+     * @param audienceTargetingBooleanOperator
+     */
+    private BuildAudienceQuery(audienceTargeting: string, audienceTargetingAll: string, audienceTargetingBooleanOperator: string): string {
+        // Check session storage for user profile data
+        if (window.sessionStorage) {
+            const userProfileData = sessionStorage.getItem(USERPROFILE_KEY);
+            if (userProfileData) {
+                let properties: IUserProfileProperty[] = JSON.parse(userProfileData);
+
+                let columnMapping: IAudienceProperty = JSON.parse(audienceTargetingAll);
+                let managedPropertyName: string = Object.keys(columnMapping)[0];
+                let managedPropertyValue: string = columnMapping[managedPropertyName];
+
+                let baseAudienceQuery: string = `${managedPropertyName}="${managedPropertyValue}"`;
+
+                let targets: string[] = audienceTargeting.split('\n');
+
+                let audienceQuery: string = '';
+                for (let i: number = 0, max = targets.length; i < max; i++) {
+                    columnMapping = JSON.parse(targets[i]);
+
+                    managedPropertyName = Object.keys(columnMapping)[0];
+                    let userProfilePropertyName: string = columnMapping[managedPropertyName];
+
+                    let property: IUserProfileProperty = this.FilterUserProfileProperties(properties, userProfilePropertyName);
+                    if (property && property.Value) {
+                        audienceQuery = `${audienceQuery}${managedPropertyName}="${property.Value}"`;
+
+                        if (i + 1 < max) {
+                            audienceQuery = `${audienceQuery} ${audienceTargetingBooleanOperator} `;
+                        } else {
+                            audienceQuery = `${audienceQuery}`;
+                        }
+                    }
+                }
+                return audienceQuery ? `(${baseAudienceQuery} OR (${audienceQuery}))` : `(${baseAudienceQuery})`;
+            }
+        }
+        return "";
+    }
+
+
+    /**
+     * Retrieves the User Profile property based on the key value
+     *
+     * @param properties
+     * @param propertyName
+     */
+    private FilterUserProfileProperties(properties: IUserProfileProperty[], propertyName: string): IUserProfileProperty {
+        for (var i = 0, len = properties.length; i < len; i++) {
+            if (properties[i].Key === propertyName) {
+                return properties[i];
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Retrieve the results from the search API

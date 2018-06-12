@@ -8,4 +8,8 @@ export interface ISearchVisualizerWebPartProps {
     scriptloading: boolean;
     duplicates: boolean;
     privateGroups: boolean;
+    enableAudienceTargeting: boolean;
+    audienceColumnMapping: string;
+    audienceColumnAllValue: string;
+    audienceBooleanOperator: string;
 }
