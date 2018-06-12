@@ -10,6 +10,9 @@ export interface ISearchVisualizerProps {
     scriptloading: boolean;
     duplicates: boolean;
     privateGroups: boolean;
+    audienceTargeting: string;
+    audienceTargetingAll: string;
+    audienceTargetingBooleanOperator: string;
     context: WebPartContext;
 }
 

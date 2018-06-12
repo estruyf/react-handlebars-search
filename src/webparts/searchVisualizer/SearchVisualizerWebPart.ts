@@ -6,7 +6,8 @@ import {
     IPropertyPaneConfiguration,
     PropertyPaneTextField,
     PropertyPaneToggle,
-    PropertyPaneSlider
+    PropertyPaneSlider,
+    PropertyPaneDropdown
 } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'searchVisualizerStrings';
@@ -14,6 +15,9 @@ import SearchVisualizer from './components/SearchVisualizer';
 import { ISearchVisualizerProps } from './components/ISearchVisualizerProps';
 import { ISearchVisualizerWebPartProps } from './ISearchVisualizerWebPartProps';
 import { SPComponentLoader } from '@microsoft/sp-loader';
+import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
+
+export const USERPROFILE_KEY = 'SearchVisualizerWebPart:UserProfileData';
 
 export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISearchVisualizerWebPartProps> {
     constructor() {
@@ -35,11 +39,26 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                 scriptloading: this.properties.scriptloading,
                 duplicates: this.properties.duplicates,
                 privateGroups: this.properties.privateGroups,
+                audienceTargeting: this.properties.audienceColumnMapping,
+                audienceTargetingAll: this.properties.audienceColumnAllValue,
+                audienceTargetingBooleanOperator: this.properties.audienceBooleanOperator ? this.properties.audienceBooleanOperator : 'OR',
                 context: this.context
             }
         );
+        let domElement: HTMLElement = this.domElement;
 
-        ReactDom.render(element, this.domElement);
+        const userProfileData = window.sessionStorage ? sessionStorage.getItem(USERPROFILE_KEY) : null;
+        if (this.properties.audienceColumnMapping && this.properties.audienceColumnAllValue && !userProfileData && window.sessionStorage) {
+            // get user profile properties if not in session storage and then process search results
+            this._getUserProfileProperties().then((result) => {
+                if (result.UserProfileProperties) {
+                    sessionStorage.setItem(USERPROFILE_KEY, JSON.stringify(result.UserProfileProperties));
+                }
+                ReactDom.render(element, domElement);
+            });
+        } else {
+            ReactDom.render(element, domElement);
+        }
     }
 
     protected get dataVersion(): Version {
@@ -107,6 +126,30 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                                 })
                             ],
                             isCollapsed: true
+                        },
+                        {
+                            groupName: strings.AudienceGroupName,
+                            groupFields: [
+                                PropertyPaneTextField('audienceColumnMapping', {
+                                    label: strings.AudienceColumnMappingLabel,
+                                    description: strings.AudienceColumnMappingDescription,
+                                    multiline: true
+                                }),
+                                PropertyPaneDropdown('audienceBooleanOperator', {
+                                    label: strings.AudienceBooleanOperatorLabel,
+                                    ariaLabel: strings.AudienceBooleanOperatorLabel,
+                                    options: [
+                                        { key: 'OR', text: 'OR' },
+                                        { key: 'AND', text: 'AND' }
+                                    ],
+                                    selectedKey: 'OR',
+                                }),
+                                PropertyPaneTextField('audienceColumnAllValue', {
+                                    label: strings.AudienceAllValueLabel,
+                                    description: strings.AudienceAllValueDescription
+                                })
+                            ],
+                            isCollapsed: true
                         }
                     ],
                     displayGroupsAsAccordion: true
@@ -155,5 +198,17 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
 	 */
     protected get disableReactivePropertyChanges(): boolean {
         return true;
+    }
+
+    /**
+     * Retrieves user profile properties
+     */
+    private _getUserProfileProperties(): Promise<any> {
+        return this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/sp.userprofiles.peoplemanager/getmyproperties`, SPHttpClient.configurations.v1)
+        .then((response: SPHttpClientResponse) => {
+            return response.json();
+        }).catch(error => {
+            return Promise.reject(JSON.stringify(error));
+        });
     }
 }
