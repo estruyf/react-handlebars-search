@@ -13,6 +13,8 @@
      */
     "safeWithCustomScriptDisabled": false,
 
+    "supportsFullBleed": true,
+
     "preconfiguredEntries": [{
         "groupId": "0651b316-c8f2-4e27-887a-b7a46b3e94c1",
         "group": {
