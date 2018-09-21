@@ -23,13 +23,13 @@
     },
     "officeFabricIconFontName": "Search",
     "properties": {
-      "query": "*",
       "maxResults": 3,
       "sorting": "",
-      "debug": true,
+      "debug": false,
       "scriptloading": false,
       "duplicates": false,
-      "privateGroups": false
+      "privateGroups": false,
+      "external": "https://estruyfdev2.sharepoint.com/Shared Documents/table-template.html"
     }
   }]
 }

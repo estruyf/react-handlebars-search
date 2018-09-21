@@ -1,7 +1,8 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
+import { DisplayMode } from "@microsoft/sp-core-library";
 
 export interface ISearchVisualizerProps {
-    title: string;
+    wpTitle: string;
     query: string;
     maxResults: number;
     sorting: string;
@@ -14,6 +15,10 @@ export interface ISearchVisualizerProps {
     audienceTargetingAll: string;
     audienceTargetingBooleanOperator: string;
     context: WebPartContext;
+
+    title: string;
+    displayMode: DisplayMode;
+    updateProperty: (value: string) => void;
 }
 
 export interface ISearchVisualizerState {

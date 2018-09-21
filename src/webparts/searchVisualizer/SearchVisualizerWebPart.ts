@@ -18,6 +18,7 @@ import { SPComponentLoader } from '@microsoft/sp-loader';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import { SearchFilter, IAdvancedFilter } from './models/IAdvancedFilter';
+import { DisplayMode } from '@microsoft/sp-core-library';
 
 
 export const USERPROFILE_KEY = 'SearchVisualizerWebPart:UserProfileData';
@@ -34,6 +35,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
       SearchVisualizer,
       {
         title: this.properties.title,
+        wpTitle: this.properties.wpTitle,
         query: this.properties.query,
         maxResults: this.properties.maxResults,
         sorting: this.getSortingOption(),
@@ -45,7 +47,11 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
         audienceTargeting: this.properties.audienceColumnMapping,
         audienceTargetingAll: this.properties.audienceColumnAllValue,
         audienceTargetingBooleanOperator: this.properties.audienceBooleanOperator ? this.properties.audienceBooleanOperator : 'OR',
-        context: this.context
+        context: this.context,
+        displayMode: this.displayMode,
+        updateProperty: (value: string) => {
+          this.properties.title = value;
+        }
       }
     );
     let domElement: HTMLElement = this.domElement;
@@ -229,7 +235,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
             {
               groupName: strings.TemplateGroupName,
               groupFields: [
-                PropertyPaneTextField('title', {
+                PropertyPaneTextField('wpTitle', {
                   label: strings.TitleFieldLabel
                 }),
                 PropertyPaneToggle('debug', {

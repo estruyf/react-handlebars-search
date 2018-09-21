@@ -3,6 +3,7 @@ import { IAdvancedFilter } from "./models/IAdvancedFilter";
 
 export interface ISearchVisualizerWebPartProps {
     title: string;
+    wpTitle: string;
     query: string;
     maxResults: number;
     sorting: string;
