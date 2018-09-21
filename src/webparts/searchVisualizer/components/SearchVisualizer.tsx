@@ -352,7 +352,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         }
 
         return (
-            <div id={this._compId} className={`${styles.searchVisualizer} ms-Fabric--v6-0-0`}>
+            <div id={this._compId} className={`${styles.searchVisualizer} ms-Fabric--v9-6-0`}>
                 {view}
 
                 <Dialog isOpen={this.state.showScriptDialog} type={DialogType.normal} onDismiss={this._toggleDialog.bind(this)} title={strings.ScriptsDialogHeader} subText={strings.ScriptsDialogSubText}></Dialog>
