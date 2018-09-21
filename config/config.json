@@ -1,18 +1,18 @@
 {
-    "$schema": "https://dev.office.com/json-schemas/spfx-build/config.2.0.schema.json",
-    "version": "2.0",
-    "bundles": {
-        "react-handlebars-search": {
-            "components": [{
-                "entrypoint": "./lib/webparts/searchVisualizer/SearchVisualizerWebPart.js",
-                "manifest": "./src/webparts/searchVisualizer/SearchVisualizerWebPart.manifest.json"
-            }]
-        }
-    },
-    "externals": {
-        "moment": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment-with-locales.min.js"
-    },
-    "localizedResources": {
-        "searchVisualizerStrings": "src/webparts/searchVisualizer/loc/{locale}.js"
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "react-handlebars-search": {
+      "components": [{
+        "entrypoint": "./lib/webparts/searchVisualizer/SearchVisualizerWebPart.js",
+        "manifest": "./src/webparts/searchVisualizer/SearchVisualizerWebPart.manifest.json"
+      }]
     }
+  },
+  "externals": {
+    "moment": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment-with-locales.min.js"
+  },
+  "localizedResources": {
+    "searchVisualizerStrings": "lib/webparts/searchVisualizer/loc/{locale}.js"
+  }
 }

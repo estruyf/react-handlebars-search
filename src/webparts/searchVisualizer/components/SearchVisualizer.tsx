@@ -4,7 +4,6 @@ import * as Handlebars from 'handlebars';
 import styles from './SearchVisualizer.module.scss';
 import { ISearchVisualizerProps, ISearchVisualizerState, IMetadata, ITemplateResource } from './ISearchVisualizerProps';
 import { SPHttpClient } from "@microsoft/sp-http";
-import SPHttpClientResponse from "@microsoft/sp-http/lib/spHttpClient/SPHttpClientResponse";
 import executeScript from "../helpers/DangerousScriptLoader";
 import SearchService from "../services/SearchService";
 import { Spinner, SpinnerSize, MessageBar, MessageBarType, Dialog, DialogType } from 'office-ui-fabric-react';
@@ -42,12 +41,6 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
             showError: false,
             showScriptDialog: false
         };
-
-        // Bind "this" to the load template function
-        this._loadTemplate = this._loadTemplate.bind(this);
-        this._processResults = this._processResults.bind(this);
-        this._prevPage = this._prevPage.bind(this);
-        this._nextPage = this._nextPage.bind(this);
 
         // Load all the handlebars helpers
         let helpers = require<any>('handlebars-helpers')({
@@ -104,50 +97,45 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     /**
      * Processing the search web part tasks
      */
-    private _processSearchTasks(): void {
-        this._loadTemplate()
-            .then((tmpl: string) => {
-                // Parse the template
-                const parser = new DOMParser();
-                this._tmplDoc = parser.parseFromString(tmpl, 'text/html');
+    private async _processSearchTasks(): Promise<void> {
+      const tmpl: string | null = await this._loadTemplate();
+      if (tmpl) {
+        // Parse the template
+        const parser = new DOMParser();
+        this._tmplDoc = parser.parseFromString(tmpl, 'text/html');
 
-                // Get the field metadata
-                let metadata: IMetadata = JSON.parse(this._tmplDoc.getElementById('metadata').innerHTML);
-                if (metadata !== null) {
-                    if (typeof metadata.fields !== "undefined") {
-                        this._fields = metadata.fields;
-                    } else {
-                        this._setDefaultMetadata();
-                    }
+        // Get the field metadata
+        let metadata: IMetadata = JSON.parse(this._tmplDoc.getElementById('metadata').innerHTML);
+        if (metadata !== null) {
+            if (typeof metadata.fields !== "undefined") {
+                this._fields = metadata.fields;
+            } else {
+                this._setDefaultMetadata();
+            }
 
-                    // Check if the metadata contains resources
-                    if (typeof metadata.resources !== "undefined") {
-                        this._resources = metadata.resources;
-                    }
-                } else {
-                    this._setDefaultMetadata();
-                }
+            // Check if the metadata contains resources
+            if (typeof metadata.resources !== "undefined") {
+                this._resources = metadata.resources;
+            }
+        } else {
+            this._setDefaultMetadata();
+        }
 
-                // Get the template metadata
-                this._templateMarkup = this._tmplDoc.getElementById('template').innerHTML;
-                // When property pane is open, check if there are script tags in the provided template
-                if (this.props.context.propertyPane.isPropertyPaneOpen() && !this.props.scriptloading) {
-                    if (this._templateMarkup.indexOf('<script') !== -1) {
-                        // Alert the user
-                        this.setState({
-                            showScriptDialog: true
-                        });
-                    }
-                }
-
-                // Retrieve the next set of results
-                this._processResults();
-            })
-            .catch((error: string) => {
+        // Get the template metadata
+        this._templateMarkup = this._tmplDoc.getElementById('template').innerHTML;
+        // When property pane is open, check if there are script tags in the provided template
+        if (this.props.context.propertyPane.isPropertyPaneOpen() && !this.props.scriptloading) {
+            if (this._templateMarkup.indexOf('<script') !== -1) {
+                // Alert the user
                 this.setState({
-                    error: error
+                    showScriptDialog: true
                 });
-            });
+            }
+        }
+
+        // Retrieve the next set of results
+        this._processResults();
+      }
     }
 
     /**
@@ -160,93 +148,101 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     /**
      * Loads the template for the web part
      */
-    private _loadTemplate(): Promise<string> {
+    private _loadTemplate = async (): Promise<string> => {
+      try {
         // Check if internal template must be used or when debugging is turned on
         if (!this.props.external || this.props.debug) {
-            return Promise.resolve(require('./debug.template.html'));
+          return require('./debug.template.html');
         }
 
-        return new Promise((resolve, reject) => {
-            this.props.context.spHttpClient.get(this.props.external, SPHttpClient.configurations.v1).then((response: SPHttpClientResponse) => {
-                if (response.ok) {
-                    resolve(response.text());
-                } else {
-                    reject(`Template: ${response.statusText}`);
-                }
-            });
+        const response = await this.props.context.spHttpClient.get(this.props.external, SPHttpClient.configurations.v1);
+        if (response.ok) {
+          return response.text();
+        } else {
+          this.setState({
+            error: `Template: ${response.statusText}`
+          });
+          return null;
+        }
+      } catch (e) {
+        this.setState({
+          error: `Failed retrieving the template`
         });
+        return null;
+      }
     }
 
     /**
      * Processing the search result retrieval process
      */
-    private _processResults() {
-        const startRow = this._pageNr * this.props.maxResults;
-        //  Get the search results and then bind it to the template
-        
-        this._searchService.get(this.props.query, this.props.audienceTargeting, this.props.audienceTargetingAll, this.props.audienceTargetingBooleanOperator, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields).then((searchResp: ISearchResponse) => {
-            // Check which resources have to be loaded
-            const locale = this.props.context.pageContext.cultureInfo.currentUICultureName;
+    private _processResults = async () => {
+      const startRow = this._pageNr * this.props.maxResults;
+      //  Get the search results and then bind it to the template
+      try {
+        const searchResp: ISearchResponse = await this._searchService.get(this.props.query, this.props.audienceTargeting, this.props.audienceTargetingAll, this.props.audienceTargetingBooleanOperator, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields);
 
-            // Get tenant URL
-            let tenantUrl = window.location.protocol + "//" + window.location.host;
+        // Check which resources have to be loaded
+        const locale = this.props.context.pageContext.cultureInfo.currentUICultureName;
 
-            // Create a new resources object
-            const resources = {};
-            this._resources.forEach(resource => {
-                if (resource.key && resource.values) {
-                    let value = "";
-                    // Check if it contains a default value
-                    if (resource.values["default"]) {
-                        value = resource.values["default"];
-                    }
-                    // Check if a resource value exists for the current language
-                    if (resource.values[locale.toLowerCase()]) {
-                        value = resource.values[locale.toLowerCase()];
-                    }
-                    // Set the resource value
-                    resources[resource.key] = value;
-                }
-            });
+        // Get tenant URL
+        let tenantUrl = window.location.protocol + "//" + window.location.host;
 
-            // Create the template values object
-            const tmplValues: any = {
-                wpTitle: this.props.title,
-                pageCtx: this.props.context.pageContext,
-                items: searchResp.results,
-                totalResults: searchResp.totalResults,
-                totalResultsIncDuplicates: searchResp.totalResultsIncludingDuplicates,
-                calledUrl: searchResp.searchUrl,
-                resources: resources,
-                locale: locale,
-                tenantUrl: tenantUrl
-            };
-
-            // Reload the new template
-            let template: HandlebarsTemplateDelegate = Handlebars.compile(this._templateMarkup);
-            let templateResult = template(tmplValues);
-
-            // Internally store the total results number
-            this._totalResults = searchResp.totalResults;
-
-            // Update the current component state
-            this.setState({
-                loading: false,
-                template: templateResult
-            });
-
-            // Check if the wp needs to execute the scripts in the HTML
-            if (this.props.scriptloading) {
-                executeScript(this._tmplDoc.getElementById('template'));
+        // Create a new resources object
+        const resources = {};
+        this._resources.forEach(resource => {
+          if (resource.key && resource.values) {
+            let value = "";
+            // Check if it contains a default value
+            if (resource.values["default"]) {
+              value = resource.values["default"];
             }
-
-            // Bind the paging events
-            this._bindPaging();
-        }).catch((error: any) => {
-            this.setState({
-                error: error.toString()
-            });
+            // Check if a resource value exists for the current language
+            if (resource.values[locale.toLowerCase()]) {
+              value = resource.values[locale.toLowerCase()];
+            }
+            // Set the resource value
+            resources[resource.key] = value;
+          }
         });
+
+        // Create the template values object
+        const tmplValues: any = {
+          wpTitle: this.props.title,
+          pageCtx: this.props.context.pageContext,
+          items: searchResp.results,
+          totalResults: searchResp.totalResults,
+          totalResultsIncDuplicates: searchResp.totalResultsIncludingDuplicates,
+          calledUrl: searchResp.searchUrl,
+          resources: resources,
+          locale: locale,
+          tenantUrl: tenantUrl
+        };
+
+        // Reload the new template
+        let template: HandlebarsTemplateDelegate = Handlebars.compile(this._templateMarkup);
+        let templateResult = template(tmplValues);
+
+        // Internally store the total results number
+        this._totalResults = searchResp.totalResults;
+
+        // Update the current component state
+        this.setState({
+          loading: false,
+          template: templateResult
+        });
+
+        // Check if the wp needs to execute the scripts in the HTML
+        if (this.props.scriptloading) {
+          executeScript(this._tmplDoc.getElementById('template'));
+        }
+
+        // Bind the paging events
+        this._bindPaging();
+      } catch (e) {
+        this.setState({
+            error: e.toString()
+        });
+      }
     }
 
 
@@ -285,8 +281,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     /**
      * Get the results of the previous page
      */
-    private _prevPage() {
-        console.log(this._pageNr);
+    private _prevPage = () => {
         this._pageNr--;
         this._processResults();
     }
@@ -294,8 +289,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
     /**
      * Get the results of the next page
      */
-    private _nextPage() {
-        console.log(this._pageNr);
+    private _nextPage = () => {
         this._pageNr++;
         this._processResults();
     }

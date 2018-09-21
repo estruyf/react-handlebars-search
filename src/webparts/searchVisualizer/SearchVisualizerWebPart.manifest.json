@@ -1,41 +1,35 @@
 {
-    "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
 
-    "id": "0651b316-c8f2-4e27-887a-b7a46b3e94c1",
-    "alias": "SearchVisualizerWebPart",
-    "componentType": "WebPart",
-    "version": "*", // The "*" signifies that the version should be taken from the package.json
-    "manifestVersion": 2,
-
-    /**
-     * This property should only be set to true if it is certain that the webpart does not
-     *  allow arbitrary scripts to be called
-     */
-    "safeWithCustomScriptDisabled": false,
-
-    "preconfiguredEntries": [{
-        "groupId": "0651b316-c8f2-4e27-887a-b7a46b3e94c1",
-        "group": {
-            "default": "SPFx web parts",
-            "fr-FR": "Webparts SPFx"
-        },
-        "title": {
-            "default": "Search result visualizer",
-            "fr-FR": "Visualiseur de résultats de recherche"
-        },
-        "description": {
-            "default": "This web part can visualize search results by making use of custom Handlebar templates",
-            "fr-FR": "Ce Webpart permet de visualiser les résultats de recherche en utilisant des template Handlebars personnalisés"
-        },
-        "officeFabricIconFontName": "Search",
-        "properties": {
-            "query": "*",
-            "maxResults": 3,
-            "sorting": "",
-            "debug": true,
-            "scriptloading": false,
-            "duplicates": false,
-            "privateGroups": false
-        }
-    }]
+  "id": "0651b316-c8f2-4e27-887a-b7a46b3e94c1",
+  "alias": "SearchVisualizerWebPart",
+  "componentType": "WebPart",
+  "version": "*",
+  "manifestVersion": 2,
+  "safeWithCustomScriptDisabled": false,
+  "preconfiguredEntries": [{
+    "groupId": "0651b316-c8f2-4e27-887a-b7a46b3e94c1",
+    "group": {
+      "default": "SPFx web parts",
+      "fr-FR": "Webparts SPFx"
+    },
+    "title": {
+      "default": "Search result visualizer",
+      "fr-FR": "Visualiseur de résultats de recherche"
+    },
+    "description": {
+      "default": "This web part can visualize search results by making use of custom Handlebar templates",
+      "fr-FR": "Ce Webpart permet de visualiser les résultats de recherche en utilisant des template Handlebars personnalisés"
+    },
+    "officeFabricIconFontName": "Search",
+    "properties": {
+      "query": "*",
+      "maxResults": 3,
+      "sorting": "",
+      "debug": true,
+      "scriptloading": false,
+      "duplicates": false,
+      "privateGroups": false
+    }
+  }]
 }
