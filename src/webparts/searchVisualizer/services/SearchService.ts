@@ -1,10 +1,10 @@
 import { IUserProfileProperty } from './IUserProfileProperty';
-import { USERPROFILE_KEY } from './../SearchVisualizerWebPart';
 import { ISearchResults, ICells, ICellValue, ISearchResponse } from './ISearchService';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { IWebPartContext } from '@microsoft/sp-webpart-base';
 import SearchTokenHelper from "../helpers/SearchTokenHelper";
 import { IAudienceProperty } from './IAudienceProperty';
+import { UserProfileService } from './UserProfileService';
 
 export default class SearchService {
   private _tokenHelper: SearchTokenHelper;
@@ -116,7 +116,7 @@ export default class SearchService {
   private BuildAudienceQuery(audienceTargeting: string, audienceTargetingAll: string, audienceTargetingBooleanOperator: string): string {
     // Check session storage for user profile data
     if (window.sessionStorage) {
-      const userProfileData = sessionStorage.getItem(USERPROFILE_KEY);
+      const userProfileData = sessionStorage.getItem(UserProfileService.USERPROFILE_KEY);
       if (userProfileData) {
         let properties: IUserProfileProperty[] = JSON.parse(userProfileData);
 

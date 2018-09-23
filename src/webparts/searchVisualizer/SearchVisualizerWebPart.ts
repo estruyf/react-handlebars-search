@@ -15,38 +15,26 @@ import SearchVisualizer from './components/SearchVisualizer';
 import { ISearchVisualizerProps } from './components/ISearchVisualizerProps';
 import { ISearchVisualizerWebPartProps } from './ISearchVisualizerWebPartProps';
 import { SPComponentLoader } from '@microsoft/sp-loader';
-import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
+import { SPHttpClient } from '@microsoft/sp-http';
 import { PropertyFieldCollectionData, CustomCollectionFieldType } from '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData';
 import { SearchFilter, IAdvancedFilter } from './models/IAdvancedFilter';
-import { DisplayMode } from '@microsoft/sp-core-library';
-
-
-export const USERPROFILE_KEY = 'SearchVisualizerWebPart:UserProfileData';
+import { UserProfileService } from './services/UserProfileService';
 
 export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISearchVisualizerWebPartProps> {
-  constructor() {
-    super();
+
+  /**
+   * Renders the search visualizer component
+   */
+  public render(): void {
     // Load the core UI Fabric styles
     SPComponentLoader.loadCss('https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.0/css/fabric-9.6.0.scoped.min.css');
-  }
 
-  public render(): void {
     const element: React.ReactElement<ISearchVisualizerProps> = React.createElement(
       SearchVisualizer,
       {
-        title: this.properties.title,
-        wpTitle: this.properties.wpTitle,
-        query: this.properties.query,
-        maxResults: this.properties.maxResults,
+        ...this.properties,
         sorting: this.getSortingOption(),
-        debug: this.properties.debug,
-        external: this.properties.external,
-        scriptloading: this.properties.scriptloading,
-        duplicates: this.properties.duplicates,
-        privateGroups: this.properties.privateGroups,
-        audienceTargeting: this.properties.audienceColumnMapping,
-        audienceTargetingAll: this.properties.audienceColumnAllValue,
-        audienceTargetingBooleanOperator: this.properties.audienceBooleanOperator ? this.properties.audienceBooleanOperator : 'OR',
+        audienceTargetingBooleanOperator: this.properties.audienceTargetingBooleanOperator ? this.properties.audienceTargetingBooleanOperator : 'OR',
         context: this.context,
         displayMode: this.displayMode,
         updateProperty: (value: string) => {
@@ -54,15 +42,10 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
         }
       }
     );
-    let domElement: HTMLElement = this.domElement;
 
-    const userProfileData = window.sessionStorage ? sessionStorage.getItem(USERPROFILE_KEY) : null;
-    if (this.properties.audienceColumnMapping && this.properties.audienceColumnAllValue && !userProfileData && window.sessionStorage) {
-      // get user profile properties if not in session storage and then process search results
-      this._getUserProfileProperties().then((result) => {
-        if (result.UserProfileProperties) {
-          sessionStorage.setItem(USERPROFILE_KEY, JSON.stringify(result.UserProfileProperties));
-        }
+    const domElement: HTMLElement = this.domElement;
+    if (this.properties.audienceTargeting && this.properties.audienceTargetingAll && window.sessionStorage) {
+      UserProfileService.getProperties(this.context.spHttpClient, this.context.pageContext.web.absoluteUrl).then(() => {
         ReactDom.render(element, domElement);
       });
     } else {
@@ -74,6 +57,9 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
     return Version.parse('1.0');
   }
 
+  /**
+   * Webpart Property Pane Configuration
+   */
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {
       pages: [
@@ -96,8 +82,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                       id: "name",
                       title: "Name",
                       type: CustomCollectionFieldType.string,
-                      required: true,
-                      onGetErrorMessage: this.validateRowOperation
+                      required: true
                     },
                     {
                       id: "filter",
@@ -175,7 +160,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                   label: strings.QueryFieldLabel,
                   description: strings.QueryFieldDescription,
                   multiline: true,
-                  onGetErrorMessage: this._queryValidation,
+                  onGetErrorMessage: this.queryValidation,
                   deferredValidationTime: 500,
                   disabled: this.properties.advancedSearch && this.properties.advancedSearch.length > 0
                 }),
@@ -245,7 +230,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                 }),
                 PropertyPaneTextField('external', {
                   label: strings.ExternalFieldLabel,
-                  onGetErrorMessage: this._externalTemplateValidation.bind(this)
+                  onGetErrorMessage: this.externalTemplateValidation.bind(this)
                 }),
                 PropertyPaneToggle('scriptloading', {
                   label: strings.ScriptloadingFieldLabel,
@@ -258,12 +243,12 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
             {
               groupName: strings.AudienceGroupName,
               groupFields: [
-                PropertyPaneTextField('audienceColumnMapping', {
+                PropertyPaneTextField('audienceTargeting', {
                   label: strings.AudienceColumnMappingLabel,
                   description: strings.AudienceColumnMappingDescription,
                   multiline: true
                 }),
-                PropertyPaneDropdown('audienceBooleanOperator', {
+                PropertyPaneDropdown('audienceTargetingBooleanOperator', {
                   label: strings.AudienceBooleanOperatorLabel,
                   ariaLabel: strings.AudienceBooleanOperatorLabel,
                   options: [
@@ -272,7 +257,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                   ],
                   selectedKey: 'OR',
                 }),
-                PropertyPaneTextField('audienceColumnAllValue', {
+                PropertyPaneTextField('audienceTargetingAll', {
                   label: strings.AudienceAllValueLabel,
                   description: strings.AudienceAllValueDescription
                 })
@@ -291,7 +276,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
   *
   * @param value
   */
-  private _queryValidation(value: string): string {
+  private queryValidation(value: string): string {
     // Check if a URL is specified
     if (value.trim() === "") {
       return strings.QuertValidationEmpty;
@@ -305,7 +290,7 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
   *
   * @param value
   */
-  private _externalTemplateValidation(value: string): string {
+  private externalTemplateValidation(value: string): string {
     // If debug template is set to off, user needs to specify a template URL
     if (!this.properties.debug) {
       // Check if a URL is specified
@@ -369,25 +354,6 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
       default:
         return `${item.name}${item.filter}${item.value} ${item.operator || ""}`.trim();
     }
-  }
-
-  /**
-  * Retrieves user profile properties
-  */
-  private _getUserProfileProperties(): Promise<any> {
-    return this.context.spHttpClient.get(`${this.context.pageContext.web.absoluteUrl}/_api/sp.userprofiles.peoplemanager/getmyproperties`, SPHttpClient.configurations.v1)
-    .then((response: SPHttpClientResponse) => {
-      return response.json();
-    }).catch(error => {
-      return Promise.reject(JSON.stringify(error));
-    });
-  }
-
-  private validateRowOperation(value: any, index: number, crntItem: IAdvancedFilter): string {
-    if (crntItem.filter === SearchFilter.notContains) {
-    }
-
-    return "";
   }
 
   /**
