@@ -85,66 +85,9 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                 }),
                 PropertyPaneTextField('sorting', {
                   label: strings.SortingFieldLabel
-                }),
-                PropertyPaneToggle('duplicates', {
-                  label: strings.DuplicatesFieldLabel,
-                  onText: strings.DuplicatesFieldLabelOn,
-                  offText: strings.DuplicatesFieldLabelOff
-                }),
-                PropertyPaneToggle('privateGroups', {
-                  label: strings.PrivateGroupsFieldLabel,
-                  onText: strings.PrivateGroupsFieldLabelOn,
-                  offText: strings.PrivateGroupsFieldLabelOff
                 })
               ],
               isCollapsed: false
-            },
-            {
-              groupName: strings.TemplateGroupName,
-              groupFields: [
-                PropertyPaneTextField('wpTitle', {
-                  label: strings.TitleFieldLabel
-                }),
-                PropertyPaneToggle('debug', {
-                  label: strings.DebugFieldLabel,
-                  onText: strings.DebugFieldLabelOn,
-                  offText: strings.DebugFieldLabelOff
-                }),
-                PropertyPaneTextField('external', {
-                  label: strings.ExternalFieldLabel,
-                  onGetErrorMessage: this.externalTemplateValidation.bind(this)
-                }),
-                PropertyPaneToggle('scriptloading', {
-                  label: strings.ScriptloadingFieldLabel,
-                  onText: strings.ScriptloadingFieldLabelOn,
-                  offText: strings.ScriptloadingFieldLabelOff
-                })
-              ],
-              isCollapsed: true
-            },
-            {
-              groupName: strings.AudienceGroupName,
-              groupFields: [
-                PropertyPaneTextField('audienceTargeting', {
-                  label: strings.AudienceColumnMappingLabel,
-                  description: strings.AudienceColumnMappingDescription,
-                  multiline: true
-                }),
-                PropertyPaneDropdown('audienceTargetingBooleanOperator', {
-                  label: strings.AudienceBooleanOperatorLabel,
-                  ariaLabel: strings.AudienceBooleanOperatorLabel,
-                  options: [
-                    { key: 'OR', text: 'OR' },
-                    { key: 'AND', text: 'AND' }
-                  ],
-                  selectedKey: 'OR',
-                }),
-                PropertyPaneTextField('audienceTargetingAll', {
-                  label: strings.AudienceAllValueLabel,
-                  description: strings.AudienceAllValueDescription
-                })
-              ],
-              isCollapsed: true
             }
           ],
           displayGroupsAsAccordion: true
