@@ -70,6 +70,91 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
             {
               groupName: strings.QueryGroupName,
               groupFields: [
+                PropertyFieldCollectionData("advancedSearch", {
+                  key: "advancedSearch",
+                  label: "Advanced search",
+                  panelHeader: "Advanced search",
+                  manageBtnLabel: "Define advanced search filter",
+                  value: this.properties.advancedSearch,
+                  fields: [
+                    {
+                      id: "name",
+                      title: "Name",
+                      type: CustomCollectionFieldType.string,
+                      required: true
+                    },
+                    {
+                      id: "filter",
+                      title: "Filter",
+                      type: CustomCollectionFieldType.dropdown,
+                      options:[
+                        {
+                          text: "Contains",
+                          key: SearchFilter.contains
+                        },
+                        {
+                          text: "Contains starts with",
+                          key: SearchFilter.containsStartsWith
+                        },
+                        {
+                          text: "Equals",
+                          key: SearchFilter.equals
+                        },
+                        {
+                          text: "Starts with",
+                          key: SearchFilter.startsWith
+                        },
+                        {
+                          text: "Less than",
+                          key: SearchFilter.lessThan
+                        },
+                        {
+                          text: "Greater than",
+                          key: SearchFilter.greaterThan
+                        },
+                        {
+                          text: "Not contains",
+                          key: SearchFilter.notContains
+                        },
+                        {
+                          text: "Not equals",
+                          key: SearchFilter.notEquals
+                        },
+                        {
+                          text: "Not starts with",
+                          key: SearchFilter.notStartsWith
+                        }
+                      ],
+                      defaultValue: SearchFilter.contains
+                    },
+                    {
+                      id: "value",
+                      title: "Value",
+                      type: CustomCollectionFieldType.string,
+                      required: true
+                    },
+                    {
+                      id: "operator",
+                      title: "Operator",
+                      type: CustomCollectionFieldType.dropdown,
+                      options:[
+                        {
+                          text: "",
+                          key: null
+                        },
+                        {
+                          text: "AND",
+                          key: "AND"
+                        },
+                        {
+                          text: "OR",
+                          key: "OR"
+                        }
+                      ]
+                    }
+                  ],
+                  disabled: false
+                }),
                 PropertyPaneTextField('query', {
                   label: strings.QueryFieldLabel,
                   description: strings.QueryFieldDescription,
@@ -83,9 +168,42 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                   min: 1,
                   max: 50
                 }),
-                PropertyPaneTextField('sorting', {
-                  label: strings.SortingFieldLabel
-                })
+                PropertyFieldCollectionData("mpSorting", {
+                  key: "mpSorting",
+                  label: "Define search results sorting",
+                  panelHeader: "Define search results sorting",
+                  panelDescription: "In this panel you can define by which managed properties you want to sort your search results. For example: LastModifiedTime, SPSiteUrl, ...",
+                  manageBtnLabel: "Manage sorting",
+                  value: this.properties.mpSorting,
+                  fields: [
+                    {
+                      id: "mpName",
+                      title: "Name",
+                      type: CustomCollectionFieldType.string,
+                      required: true,
+                      onGetErrorMessage: this.validateSortingProperty,
+                      deferredValidationTime: 500
+                    },
+                    {
+                      id: "mpOrder",
+                      title: "Sort order",
+                      type: CustomCollectionFieldType.dropdown,
+                      options: [
+                        {
+                          key: "ascending",
+                          text: "Ascending"
+                        },
+                        {
+                          key: "descending",
+                          text: "Descending"
+                        }
+                      ],
+                      defaultValue: "ascending",
+                      required: true
+                    }
+                  ],
+                  disabled: false
+                }),
               ],
               isCollapsed: false
             }
