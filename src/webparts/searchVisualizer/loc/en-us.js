@@ -1,5 +1,14 @@
 define([], function () {
     return {
+        InvalidSortingFieldDescription: "The managed property \"{0}\" is not sortable.",
+        SortingPanelLabel: "Define search results sorting",
+        SortingPanelHeader: "Define search results sorting",
+        SortingPanelDescription: "In this panel you can define by which managed properties you want to sort your search results. For example: LastModifiedTime, SPSiteUrl, ...",
+        ManageSortingBtnLabel: "Manage sorting",
+        NameTitle: "Name",
+        SortOrderTitle: "Sort order",
+        Descending: "Descending",
+        Ascending: "Ascending",
         'PropertyPaneDescription': 'Search Web Part Settings',
         'QueryGroupName': 'Search query settings',
         'AudienceGroupName': 'Audience targeting settings',
