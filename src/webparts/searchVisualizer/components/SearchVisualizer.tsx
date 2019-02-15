@@ -175,7 +175,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
                 }
             }).catch(e => {
                 // Handle other errors
-                // Sample: Error observed in the wild while trying to load HTML sample template from GitHub: "TypeError: Failed to fetch"
+                // Sample: Error observed in the wild while trying to load HTML sample template from GitHub: "TypeError: Failed to fetch" (CORS error)
                 reject(`Error while fetching template: ${e.toString()}`);
             });
         });
