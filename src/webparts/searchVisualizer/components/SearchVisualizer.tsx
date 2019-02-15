@@ -173,6 +173,10 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
                 } else {
                     reject(`Template: ${response.statusText}`);
                 }
+            }).catch(e => {
+                // Handle other errors
+                // Sample: Error observed in the wild while trying to load HTML sample template from GitHub: "TypeError: Failed to fetch"
+                reject(`Error while fetching template: ${e.toString()}`);
             });
         });
     }
