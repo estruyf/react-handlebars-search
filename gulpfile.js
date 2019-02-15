@@ -36,7 +36,8 @@ const envCheck = build.subTask('environmentCheck', (gulp, config, done) => {
 
 
         generatedConfiguration.node = {
-          fs: 'empty'
+          fs: 'empty',
+          readline: 'empty'
         }
 
         return generatedConfiguration;
