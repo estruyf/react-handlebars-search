@@ -179,7 +179,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
       const startRow = this._pageNr * this.props.maxResults;
       //  Get the search results and then bind it to the template
       try {
-        const searchResp: ISearchResponse = await this._searchService.get(this.props.query, this.props.audienceTargeting, this.props.audienceTargetingAll, this.props.audienceTargetingBooleanOperator, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields);
+        const searchResp: ISearchResponse = await this._searchService.get(this.props.query, this.props.audienceColumnMapping, this.props.audienceColumnAllValue, this.props.audienceTargetingBooleanOperator, this.props.maxResults, this.props.sorting, this.props.duplicates, this.props.privateGroups, startRow, this._fields);
 
         // Check which resources have to be loaded
         const locale = this.props.context.pageContext.cultureInfo.currentUICultureName;
@@ -352,7 +352,7 @@ export default class SearchVisualizer extends React.Component<ISearchVisualizerP
         }
 
         return (
-            <div id={this._compId} className={`${styles.searchVisualizer} ms-Fabric--v6-0-0`}>
+            <div id={this._compId} className={`${styles.searchVisualizer} ms-Fabric--v9-6-1`}>
                 {view}
 
                 <Dialog isOpen={this.state.showScriptDialog} type={DialogType.normal} onDismiss={this._toggleDialog.bind(this)} title={strings.ScriptsDialogHeader} subText={strings.ScriptsDialogSubText}></Dialog>

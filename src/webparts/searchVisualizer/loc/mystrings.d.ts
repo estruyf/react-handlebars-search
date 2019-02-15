@@ -1,4 +1,13 @@
 declare interface ISearchVisualizerStrings {
+    InvalidSortingFieldDescription: string;
+    SortingPanelLabel: string;
+    SortingPanelHeader: string;
+    SortingPanelDescription: string;
+    ManageSortingBtnLabel: string;
+    NameTitle: string;
+    SortOrderTitle: string;
+    Descending: string;
+    Ascending: string;
     /* Fields */
     PropertyPaneDescription: string;
     QueryGroupName: string;

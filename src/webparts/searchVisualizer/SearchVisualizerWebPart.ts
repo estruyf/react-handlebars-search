@@ -16,31 +16,21 @@ import { ISearchVisualizerProps } from './components/ISearchVisualizerProps';
 import { ISearchVisualizerWebPartProps } from './ISearchVisualizerWebPartProps';
 import { SPComponentLoader } from '@microsoft/sp-loader';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
+import { Text } from '@microsoft/sp-core-library';
 
 export const USERPROFILE_KEY = 'SearchVisualizerWebPart:UserProfileData';
 
+require('./styles/fabric-9.6.1.scoped.css');
 export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISearchVisualizerWebPartProps> {
-  constructor() {
-    super();
-    // Load the core UI Fabric styles
-    SPComponentLoader.loadCss('https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/6.0.0/css/fabric-6.0.0.scoped.min.css');
-  }
+  private propertyFieldCollectionData = null;
+  private customCollectionFieldType = null;
 
   public render(): void {
     const element: React.ReactElement<ISearchVisualizerProps> = React.createElement(
       SearchVisualizer,
       {
-        title: this.properties.title,
-        query: this.properties.query,
-        maxResults: this.properties.maxResults,
-        sorting: this.properties.sorting,
-        debug: this.properties.debug,
-        external: this.properties.external,
-        scriptloading: this.properties.scriptloading,
-        duplicates: this.properties.duplicates,
-        privateGroups: this.properties.privateGroups,
-        audienceTargeting: this.properties.audienceColumnMapping,
-        audienceTargetingAll: this.properties.audienceColumnAllValue,
+        ...this.properties,
+        sorting: this.getSortingOption(),
         audienceTargetingBooleanOperator: this.properties.audienceBooleanOperator ? this.properties.audienceBooleanOperator : 'OR',
         context: this.context
       }
@@ -63,6 +53,19 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
 
   protected get dataVersion(): Version {
     return Version.parse('1.0');
+  }
+
+  /**
+   * Load property pane resources
+   */
+  protected async loadPropertyPaneResources(): Promise<void> {
+    const { PropertyFieldCollectionData, CustomCollectionFieldType } = await import (
+      /* webpackChunkName: 'pnp-controls-collectiondata' */
+      '@pnp/spfx-property-controls/lib/PropertyFieldCollectionData'
+    );
+
+    this.propertyFieldCollectionData = PropertyFieldCollectionData;
+    this.customCollectionFieldType = CustomCollectionFieldType;
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
@@ -88,8 +91,44 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
                   min: 1,
                   max: 50
                 }),
-                PropertyPaneTextField('sorting', {
-                  label: strings.SortingFieldLabel
+                // PropertyPaneTextField('sorting', {
+                //   label: strings.SortingFieldLabel
+                // }),
+                this.propertyFieldCollectionData("mpSorting", {
+                  key: "mpSorting",
+                  label: strings.SortingPanelLabel,
+                  panelHeader: strings.SortingPanelHeader,
+                  panelDescription: strings.SortingPanelDescription,
+                  manageBtnLabel: strings.ManageSortingBtnLabel,
+                  value: this.properties.mpSorting,
+                  fields: [
+                    {
+                      id: "mpName",
+                      title: strings.NameTitle,
+                      type: this.customCollectionFieldType.string,
+                      required: true,
+                      onGetErrorMessage: this.validateSortingProperty,
+                      deferredValidationTime: 500
+                    },
+                    {
+                      id: "mpOrder",
+                      title: strings.SortOrderTitle,
+                      type: this.customCollectionFieldType.dropdown,
+                      options: [
+                        {
+                          key: "ascending",
+                          text: strings.Ascending
+                        },
+                        {
+                          key: "descending",
+                          text: strings.Descending
+                        }
+                      ],
+                      defaultValue: "ascending",
+                      required: true
+                    }
+                  ],
+                  disabled: false
                 }),
                 PropertyPaneToggle('duplicates', {
                   label: strings.DuplicatesFieldLabel,
@@ -156,6 +195,38 @@ export default class SearchVisualizerWebPart extends BaseClientSideWebPart<ISear
         }
       ]
     };
+  }
+
+  /**
+  * Returns the sorting options in the right format
+  */
+  private getSortingOption() {
+    const { mpSorting } = this.properties;
+    if (mpSorting && mpSorting.length > 0) {
+      return mpSorting.map(mp => `${mp.mpName}:${mp.mpOrder}`).join(',');
+    }
+    return null;
+  }
+
+  /**
+  * Check if the provided managed property is sortable
+  *
+  * @param value
+  * @param index
+  * @param crntItem
+  */
+  private validateSortingProperty = async (value: any): Promise<string> => {
+    if (value) {
+      try {
+        const searchApi = `${this.context.pageContext.web.absoluteUrl}/_api/search/query?querytext='*'&sortlist='${value}:ascending'&RowLimit=1&selectproperties='Path'`;
+        const data = await this.context.spHttpClient.get(searchApi, SPHttpClient.configurations.v1);
+        return data.ok ? "" : Text.format(strings.InvalidSortingFieldDescription, value);
+      } catch (e) {
+        console.log(e);
+        return "Something failed";
+      }
+    }
+    return "";
   }
 
   /**

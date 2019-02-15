@@ -3,16 +3,19 @@
   "version": "2.0",
   "bundles": {
     "react-handlebars-search": {
-      "components": [{
-        "entrypoint": "./lib/webparts/searchVisualizer/SearchVisualizerWebPart.js",
-        "manifest": "./src/webparts/searchVisualizer/SearchVisualizerWebPart.manifest.json"
-      }]
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/searchVisualizer/SearchVisualizerWebPart.js",
+          "manifest": "./src/webparts/searchVisualizer/SearchVisualizerWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {
     "moment": "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment-with-locales.min.js"
   },
   "localizedResources": {
-    "searchVisualizerStrings": "lib/webparts/searchVisualizer/loc/{locale}.js"
+    "searchVisualizerStrings": "lib/webparts/searchVisualizer/loc/{locale}.js",
+    "PropertyControlStrings": "node_modules/@pnp/spfx-property-controls/lib/loc/{locale}.js"
   }
 }
