@@ -36,7 +36,7 @@ export default class SearchService {
       }
 
       // Check if a query is provided
-      url += !this._isEmptyString(query) ? `'${this._tokenHelper.replaceTokens(query)} ${audienceQuery}'` : "'*'";
+      url += !this._isEmptyString(query) ? `'${encodeURIComponent(this._tokenHelper.replaceTokens(query))} ${audienceQuery}'` : "'*'";
 
       // Check if there are fields provided
       if (!this._isEmptyString(fields.join(','))) {
